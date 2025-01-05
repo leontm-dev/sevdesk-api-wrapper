@@ -1,6 +1,6 @@
 {
   "name": "sevdesk-api-wrapper",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "main": "dist/index.js",
   "type": "module",
   "scripts": {
@@ -34,5 +34,6 @@
   "devDependencies": {
     "ts-node": "^10.9.2",
     "typescript": "^5.7.2"
-  }
+  },
+  "readme": "https://github.com/leontm-dev/sevdesk-api-wrapper/blob/main/README.md"
 }
