@@ -170,5 +170,5 @@ export default class SevDeskAPIWrapper {
       },
     };
   }
-  async updateAnExistingCheckAccount(checkAccountId: number; 
+  async updateAnExistingCheckAccount(checkAccountId: number) {}; 
 }
