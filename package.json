@@ -1,17 +1,35 @@
 {
   "name": "sevdesk-api-wrapper",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "main": "dist/index.js",
   "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "yarn && tsc",
+    "publish": "yarn build && npm publish"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "sevdesk",
+    "api",
+    "wrapper",
+    "typescript",
+    "typesafe",
+    "nodejs",
+    "api-wrapper"
+  ],
+  "homepage": "https://github.com/leontm-dev/sevdesk-api-wrapper",
+  "author": {
+    "email": "lanneken09@gmail.com",
+    "name": "Leon Anneken",
+    "url": "https://leontm.me"
+  },
   "license": "ISC",
-  "description": "",
+  "description": "This package is a typesafe wrapper for the sevDesk API",
   "dependencies": {
     "node-fetch": "^3.3.2"
+  },
+  "bugs": {
+    "email": "lanneken09@gmail.com",
+    "url": "https://github.com/leontm-dev/sevdesk-api-wrapper/issues"
   },
   "devDependencies": {
     "ts-node": "^10.9.2",
