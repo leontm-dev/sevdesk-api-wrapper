@@ -273,3 +273,27 @@ export type CreateANewAccountingContactResponse = {
 export type FindAccountingContactByIDResponse = {
   objects: AccountingContact[];
 };
+export type UpdateAnExistingAccountingContactBody = {
+  contact: {
+    id: number;
+    objectName: "Contact";
+  };
+  debitorNumber: number | null;
+  creditorNumber: number | null;
+};
+export type UpdateAnExistingAccountingContactResponse = {
+  id: string;
+  objectName: string;
+  create: Date;
+  update: Date;
+  contact: {
+    id: string;
+    objectName: "Contact";
+  };
+  sevClient: {
+    id: string;
+    objectName: "SevClient";
+  };
+  debitorNumber: string;
+  creditorNumber: string;
+};

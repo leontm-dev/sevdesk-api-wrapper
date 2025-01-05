@@ -23,6 +23,8 @@ import {
   RetrieveBookkeepingSystemVersionResponse,
   RetrieveCheckAccountsResponse,
   RetrieveTransactionsResponse,
+  UpdateAnExistingAccountingContactBody,
+  UpdateAnExistingAccountingContactResponse,
   UpdateAnExistingCheckAccountBody,
   UpdateAnExistingCheckAccountResponse,
 } from "./types/SevDeskResponses.js";
@@ -656,5 +658,45 @@ Linked invoices, credit notes or vouchers cannot be changed when the transaction
         size: response.size,
       },
     };
+  }
+  /**
+   * Attention, updating an existing AccountingContact can lead to booking errors, especially in the DATEV export. Compatibility of sevdesk with DATEV is no longer guaranteed.
+   * @param accountingContactId ID of accounting contact to update
+   * @param body Update data
+   * @returns Returns changed accounting contact resource
+   */
+  async updateAnExistingAccountingContact(
+    accountingContactId: number,
+    body: UpdateAnExistingAccountingContactBody
+  ): Promise<IResponse<UpdateAnExistingAccountingContactResponse>> {
+    const response = await fetch(
+      `${this.apiUrl}/AccountingContact/${accountingContactId}`,
+      {
+        method: "PUT",
+        headers: {
+          Authorization: this.apiKey,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(body),
+      }
+    );
+    const data = await response.json();
+    const responseObj: IResponse<UpdateAnExistingAccountingContactResponse> = {
+      status: response.status,
+      response: {
+        body: await response.text(),
+        bodyUsed: response.bodyUsed,
+        data: data ? (data as UpdateAnExistingAccountingContactResponse) : null,
+        headers: response.headers,
+        ok: response.ok,
+        redirected: response.redirected,
+        status: response.status,
+        statusText: response.statusText,
+        type: response.type,
+        url: response.url,
+        size: response.size,
+      },
+    };
+    return responseObj;
   }
 }
