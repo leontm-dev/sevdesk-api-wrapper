@@ -14,6 +14,7 @@ import {
   CreateANewTransactionBody,
   CreateANewTransactionResponse,
   DeleteACheckAccountResponse,
+  DeletesAnAccountingContactResponse,
   EnshrineResponse,
   FindAccountingContactByIDResponse,
   FindCheckAccountByIdResponse,
@@ -698,5 +699,35 @@ Linked invoices, credit notes or vouchers cannot be changed when the transaction
       },
     };
     return responseObj;
+  }
+  async deletesAnAccountingContact(
+    accountingContactId: number
+  ): Promise<IResponse<DeletesAnAccountingContactResponse>> {
+    const response = await fetch(
+      `${this.apiUrl}/AccountingContact/${accountingContactId}`,
+      {
+        method: "DELETE",
+        headers: {
+          Authorization: this.apiKey,
+        },
+      }
+    );
+    const data = await response.json();
+    return {
+      status: response.status,
+      response: {
+        body: await response.text(),
+        bodyUsed: response.bodyUsed,
+        data: data ? (data as DeletesAnAccountingContactResponse) : null,
+        headers: response.headers,
+        ok: response.ok,
+        redirected: response.redirected,
+        status: response.status,
+        statusText: response.statusText,
+        type: response.type,
+        url: response.url,
+        size: response.size,
+      },
+    };
   }
 }

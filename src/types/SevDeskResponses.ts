@@ -297,3 +297,6 @@ export type UpdateAnExistingAccountingContactResponse = {
   debitorNumber: string;
   creditorNumber: string;
 };
+export type DeletesAnAccountingContactResponse = {
+  objects: [null];
+};
