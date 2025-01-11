@@ -26,7 +26,7 @@ import { VoucherPos } from "./VoucherPos/index.js";
 
 export const apiUrl = "https://my.sevdesk.de/api/v1";
 
-export default class SevDeskAPIWrapper {
+export default class SevdeskAPIWrapper {
   AccountingContact: AccountingContact;
   Basics: Basics;
   CheckAccount: CheckAccount;
