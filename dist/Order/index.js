@@ -1,9 +1,13 @@
+"use strict";
 // Imports
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Order = void 0;
 // Project-Imports
 // Code
-export class Order {
-    apiKey;
-    constructor(apiKey) {
+var Order = /** @class */ (function () {
+    function Order(apiKey) {
         this.apiKey = apiKey;
     }
-}
+    return Order;
+}());
+exports.Order = Order;

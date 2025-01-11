@@ -1,9 +1,13 @@
+"use strict";
 // Imports
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.CreditNotePos = void 0;
 // Project-Imports
 // Code
-export class CreditNotePos {
-    apiKey;
-    constructor(apiKey) {
+var CreditNotePos = /** @class */ (function () {
+    function CreditNotePos(apiKey) {
         this.apiKey = apiKey;
     }
-}
+    return CreditNotePos;
+}());
+exports.CreditNotePos = CreditNotePos;

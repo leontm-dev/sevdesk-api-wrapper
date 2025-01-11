@@ -1,9 +1,13 @@
+"use strict";
 // Imports
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Part = void 0;
 // Project-Imports
 // Code
-export class Part {
-    apiKey;
-    constructor(apiKey) {
+var Part = /** @class */ (function () {
+    function Part(apiKey) {
         this.apiKey = apiKey;
     }
-}
+    return Part;
+}());
+exports.Part = Part;
