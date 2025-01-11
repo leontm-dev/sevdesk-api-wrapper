@@ -41,7 +41,7 @@ This package aims to grant full typesafe support for the whole sevdesk api:
 | [CommunicationWay](https://api.sevdesk.de/#tag/CommunicationWay)               | ✅         |
 | [ContactAddress](https://api.sevdesk.de/#tag/ContactAddress)                   | ✅         |
 | [Contact](https://api.sevdesk.de/#tag/Contact)                                 | ✅         |
-| [ContactField](https://api.sevdesk.de/#tag/ContactField)                       | ❌         |
+| [ContactField](https://api.sevdesk.de/#tag/ContactField)                       | ✅         |
 | [CreditNote](https://api.sevdesk.de/#tag/CreditNote)                           | ❌         |
 | [CreditNotePos](https://api.sevdesk.de/#tag/CreditNotePos)                     | ❌         |
 | [Export](https://api.sevdesk.de/#tag/Export)                                   | ❌         |

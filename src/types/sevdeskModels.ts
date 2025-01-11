@@ -156,3 +156,32 @@ export type ContactAddress = {
   name3: string | null;
   name4: string | null;
 };
+export type ContactField = {
+  id: string;
+  objectName: "ContactCustomField";
+  create: Date;
+  update: Date;
+  sevClient: {
+    id: string;
+    objectName: "SevClient";
+  };
+  contact: {
+    id: string;
+    objectName: "Contact";
+  };
+  contactCustomFieldSetting: ContactCustomFieldSetting;
+  value: string;
+};
+export type ContactCustomFieldSetting = {
+  id: string;
+  objectName: "ContactCustomFieldSetting";
+  create: Date;
+  update: Date;
+  sevClient: {
+    id: string;
+    objectName: "SevClient";
+  };
+  name: string;
+  identifier: string;
+  description: string;
+};
