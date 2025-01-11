@@ -39,7 +39,7 @@ This package aims to grant full typesafe support for the whole sevdesk api:
 | [CheckAccountTransaction](https://api.sevdesk.de/#tag/CheckAccountTransaction) | ✅         |
 | [AccountingContact](https://api.sevdesk.de/#tag/AccountingContact)             | ✅         |
 | [CommunicationWay](https://api.sevdesk.de/#tag/CommunicationWay)               | ✅         |
-| [ContactAddress](https://api.sevdesk.de/#tag/ContactAddress)                   | ❌         |
+| [ContactAddress](https://api.sevdesk.de/#tag/ContactAddress)                   | ✅         |
 | [Contact](https://api.sevdesk.de/#tag/Contact)                                 | ✅         |
 | [ContactField](https://api.sevdesk.de/#tag/ContactField)                       | ❌         |
 | [CreditNote](https://api.sevdesk.de/#tag/CreditNote)                           | ❌         |

@@ -127,3 +127,32 @@ export type Contact = {
   buyerReference: string;
   governmentAgency: string;
 };
+export type ContactAddress = {
+  id: number;
+  objectName: string;
+  create: Date;
+  update: Date;
+  contact: {
+    id: number;
+    objectName: "Contact";
+  };
+  street: string | null;
+  zip: string | null;
+  city: string | null;
+  country: {
+    id: number;
+    objectName: "StaticCountry";
+  };
+  category: {
+    id: number;
+    objectName: "Category";
+  } | null;
+  name: string | null;
+  sevClient: {
+    id: number;
+    objectName: "SevClient";
+  };
+  name2: string | null;
+  name3: string | null;
+  name4: string | null;
+};
