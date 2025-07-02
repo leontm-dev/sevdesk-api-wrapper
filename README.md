@@ -4,7 +4,7 @@ This extension works around the official sevdesk api. It helps interacting with 
 
 Current version: v0.0.3
 
-All of this feature are directly taken from the [official sevdesk API Documentation](https://api.sevdesk.de). Still this package is not supported by sevdesk GmbH in any kind or way.
+All of these feature/functions are directly taken from the [official sevdesk API Documentation](https://api.sevdesk.de). Still this package is not supported by sevdesk GmbH in any kind or way.
 
 It is just a package I used to automate the interaction with sevdesk for our [finda](https://payments.find-a.app) service.
 
