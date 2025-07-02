@@ -1,47 +1,17 @@
 // Project-Imports
 
-import { AccountingContact } from "../../types/sevdeskModels.js";
+import { AccountingContact } from "./base.types";
 
 // Code
 
-export type RetrieveAccountingContactResponse = {
+export type getAccountingContactResponse = {
   objects: AccountingContact[];
 };
-export type CreateANewAccountingContactResponse = {
-  id: string;
-  objectName: string;
-  create: Date;
-  update: Date;
-  contact: {
-    id: string;
-    objectName: "Contact";
-  };
-  sevClient: {
-    id: string;
-    objectName: "SevClient";
-  };
-  debitorNumber: string;
-  creditorNumber: string;
-};
-export type FindAccountingContactByIDResponse = {
+export type createAccountingContactResponse = AccountingContact;
+export type getAccountingContactByIdResponse = {
   objects: AccountingContact[];
 };
-export type UpdateAnExistingAccountingContactResponse = {
-  id: string;
-  objectName: string;
-  create: Date;
-  update: Date;
-  contact: {
-    id: string;
-    objectName: "Contact";
-  };
-  sevClient: {
-    id: string;
-    objectName: "SevClient";
-  };
-  debitorNumber: string;
-  creditorNumber: string;
-};
-export type DeletesAnAccountingContactResponse = {
+export type updateAccountingContactResponse = AccountingContact;
+export type deleteAccountingContactResponse = {
   objects: [null];
 };

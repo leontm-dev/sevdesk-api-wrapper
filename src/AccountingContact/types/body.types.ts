@@ -1,18 +1,48 @@
 // Code
 
-export type CreateANewAccountingContactBody = {
+export type createAccountingContactBody = {
+  /**
+   * The contact to which this accounting contact belongs
+   */
   contact: {
+    /**
+     * Unique identifier of the contact
+     */
     id: number;
+    /**
+     * Model name, which is 'Contact'
+     */
     objectName: "Contact";
   };
-  debitorNumber: number | null;
-  creditorNumber: number | null;
+  /**
+   * Debitor number of the accounting contact.
+   */
+  debitorNumber?: number | null;
+  /**
+   * Creditor number of the accounting contact.
+   */
+  creditorNumber?: number | null;
 };
-export type UpdateAnExistingAccountingContactBody = {
-  contact: {
+export type updateAccountingContactBody = {
+  /**
+   * The contact to which this accounting contact belongs.
+   */
+  contact?: {
+    /**
+     * Unique identifier of the contact
+     */
     id: number;
+    /**
+     * Model name, which is 'Contact'
+     */
     objectName: "Contact";
   };
-  debitorNumber: number | null;
-  creditorNumber: number | null;
+  /**
+   * Debitor number of the accounting contact.
+   */
+  debitorNumber?: number | null;
+  /**
+   * Creditor number of the accounting contact.
+   */
+  creditorNumber?: number | null;
 };
