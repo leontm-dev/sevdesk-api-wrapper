@@ -1,44 +1,25 @@
 // Project-Imports
 
-import { CheckAccount } from "../../types/sevdeskModels.js";
+import { CheckAccount } from "./base.types";
 
 // Code
 
-export type RetrieveCheckAccountsResponse = {
+export type getCheckAccountsResponse = {
   objects: CheckAccount[];
 };
-export type CreateANewFileImportAccountResponse = {
+export type createFileImportAccountResponse = {
   objects: CheckAccount;
 };
-export type CreateANewClearingAccountResponse = {
+export type createClearingAccountResponse = {
   objects: CheckAccount;
 };
-export type FindCheckAccountByIdResponse = {
+export type getCheckAccountByIdResponse = {
   objects: CheckAccount[];
 };
-export type UpdateAnExistingCheckAccountResponse = {
-  id: string;
-  objectName: "CheckAccount";
-  create: Date;
-  update: Date;
-  sevClient: {
-    id: string;
-    objectName: "SevClient";
-  };
-  name: string;
-  iban: string | null;
-  type: "online" | "offline";
-  importType: "CSV" | "MT940" | null;
-  currency: string;
-  defaultAccount: string;
-  status: 0 | 100;
-  bankServer: string | null;
-  autoMapTransactions: string | null;
-  accountingNumber: string;
-};
-export type DeleteACheckAccountResponse = {
+export type updateCheckAccountResponse = CheckAccount;
+export type deleteCheckAccountResponse = {
   objects: [null];
 };
-export type GetTheBalanceAtAGivenDateResponse = {
+export type getBalanceAtDateResponse = {
   objects: string;
 };
