@@ -19,6 +19,7 @@ import { OrderPos } from "./OrderPos/index.js";
 import { Part } from "./Part/index.js";
 import { Report } from "./Report/index.js";
 import { Tag } from "./Tag/index.js";
+import sevdeskClientV2 from "./v2/index.js";
 import { Voucher } from "./Voucher/index.js";
 import { VoucherPos } from "./VoucherPos/index.js";
 
@@ -26,7 +27,7 @@ import { VoucherPos } from "./VoucherPos/index.js";
 
 export const apiUrl = "https://my.sevdesk.de/api/v1";
 
-export default class SevdeskAPIWrapper {
+export default class sevdeskAPIClient {
   AccountingContact: AccountingContact;
   Basics: Basics;
   CheckAccount: CheckAccount;
@@ -49,6 +50,7 @@ export default class SevdeskAPIWrapper {
   Voucher: Voucher;
   VoucherPos: VoucherPos;
   apiUrl: string = apiUrl;
+  v2: sevdeskClientV2;
   constructor(private apiKey: string) {
     this.AccountingContact = new AccountingContact(this.apiKey);
     this.Basics = new Basics(this.apiKey);
@@ -71,5 +73,6 @@ export default class SevdeskAPIWrapper {
     this.Tag = new Tag(this.apiKey);
     this.Voucher = new Voucher(this.apiKey);
     this.VoucherPos = new VoucherPos(this.apiKey);
+    this.v2 = new sevdeskClientV2(this.apiKey);
   }
 }
