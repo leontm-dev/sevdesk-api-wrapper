@@ -1,11 +1,5 @@
-// Imports
-
-import fetch from "node-fetch";
-
 // Project-Imports
 
-import { apiUrl } from "../index.js";
-import { IResponse } from "../types/Response.js";
 import {
   CreateANewAccountingContactBody,
   UpdateAnExistingAccountingContactBody,
@@ -17,11 +11,15 @@ import {
   DeletesAnAccountingContactResponse,
   RetrieveAccountingContactResponse,
 } from "./types/response.types.js";
+import { Responder, IResponse } from "../types/Response.js";
 
 // Code
 
 export class AccountingContact {
-  constructor(private apiKey: string) {}
+  private Responder: Responder;
+  constructor(private apiKey: string) {
+    this.Responder = new Responder(apiKey, "1");
+  }
   /**
    * Returns all accounting contact which have been added up until now. Filters can be added.
    * @param contactId ID of contact for which you want the accounting contact.
@@ -30,32 +28,22 @@ export class AccountingContact {
   async retrieveAccountingContact(
     contactId: string
   ): Promise<IResponse<RetrieveAccountingContactResponse>> {
-    const response = await fetch(
-      `${apiUrl}/AccountingContact?contact[id]=${contactId}&contact[objectName]=Contact`,
+    const response = await this.Responder.fetch(
+      "/AccountingContact",
       {
         method: "GET",
-        headers: {
-          Authorization: this.apiKey,
-        },
-      }
-    );
-    const data = await response.json();
-    return {
-      status: response.status,
-      response: {
-        body: await response.text(),
-        bodyUsed: response.bodyUsed,
-        data: data ? (data as RetrieveAccountingContactResponse) : null,
-        headers: response.headers,
-        ok: response.ok,
-        redirected: response.redirected,
-        status: response.status,
-        statusText: response.statusText,
-        type: response.type,
-        url: response.url,
-        size: response.size,
       },
-    };
+      [
+        { key: "contact[id]", value: contactId },
+        { key: "contact[objectName]", value: "Contact" },
+      ]
+    );
+
+    if (response.type === "error") {
+      throw response.obj;
+    }
+
+    return response.obj as IResponse<RetrieveAccountingContactResponse>;
   }
   /**
    * Creates a new accounting contact.
@@ -65,31 +53,15 @@ export class AccountingContact {
   async createANewAccountingContact(
     body: CreateANewAccountingContactBody
   ): Promise<IResponse<CreateANewAccountingContactResponse>> {
-    const response = await fetch(`${apiUrl}/AccountingContact`, {
+    const response = await this.Responder.fetch(`/AccountingContact`, {
       method: "POST",
       headers: {
-        Authorization: this.apiKey,
         "Content-Type": "application/json",
       },
       body: JSON.stringify(body),
     });
-    const data = await response.json();
-    return {
-      status: response.status,
-      response: {
-        body: await response.text(),
-        bodyUsed: response.bodyUsed,
-        data: data ? (data as CreateANewAccountingContactResponse) : null,
-        headers: response.headers,
-        ok: response.ok,
-        redirected: response.redirected,
-        status: response.status,
-        statusText: response.statusText,
-        type: response.type,
-        url: response.url,
-        size: response.size,
-      },
-    };
+
+    return Responder.validateResponse(response);
   }
   /**
    * Returns a single accounting contact
@@ -99,32 +71,13 @@ export class AccountingContact {
   async findAccountingContactByID(
     accountingContactId: number
   ): Promise<IResponse<FindAccountingContactByIDResponse>> {
-    const response = await fetch(
-      `${apiUrl}/AccountingContact/${accountingContactId}`,
+    const response = await this.Responder.fetch(
+      `/AccountingContact/${accountingContactId}`,
       {
         method: "GET",
-        headers: {
-          Authorization: this.apiKey,
-        },
       }
     );
-    const data = await response.json();
-    return {
-      status: response.status,
-      response: {
-        body: await response.text(),
-        bodyUsed: response.bodyUsed,
-        data: data ? (data as FindAccountingContactByIDResponse) : null,
-        headers: response.headers,
-        ok: response.ok,
-        redirected: response.redirected,
-        status: response.status,
-        statusText: response.statusText,
-        type: response.type,
-        url: response.url,
-        size: response.size,
-      },
-    };
+    return Responder.validateResponse(response);
   }
   /**
    * Attention, updating an existing AccountingContact can lead to booking errors, especially in the DATEV export. Compatibility of sevdesk with DATEV is no longer guaranteed.
@@ -136,64 +89,27 @@ export class AccountingContact {
     accountingContactId: number,
     body: UpdateAnExistingAccountingContactBody
   ): Promise<IResponse<UpdateAnExistingAccountingContactResponse>> {
-    const response = await fetch(
-      `${apiUrl}/AccountingContact/${accountingContactId}`,
+    const response = await this.Responder.fetch(
+      `/AccountingContact/${accountingContactId}`,
       {
         method: "PUT",
         headers: {
-          Authorization: this.apiKey,
           "Content-Type": "application/json",
         },
         body: JSON.stringify(body),
       }
     );
-    const data = await response.json();
-    const responseObj: IResponse<UpdateAnExistingAccountingContactResponse> = {
-      status: response.status,
-      response: {
-        body: await response.text(),
-        bodyUsed: response.bodyUsed,
-        data: data ? (data as UpdateAnExistingAccountingContactResponse) : null,
-        headers: response.headers,
-        ok: response.ok,
-        redirected: response.redirected,
-        status: response.status,
-        statusText: response.statusText,
-        type: response.type,
-        url: response.url,
-        size: response.size,
-      },
-    };
-    return responseObj;
+    return Responder.validateResponse(response);
   }
   async deletesAnAccountingContact(
     accountingContactId: number
   ): Promise<IResponse<DeletesAnAccountingContactResponse>> {
-    const response = await fetch(
-      `${apiUrl}/AccountingContact/${accountingContactId}`,
+    const response = await this.Responder.fetch(
+      `/AccountingContact/${accountingContactId}`,
       {
         method: "DELETE",
-        headers: {
-          Authorization: this.apiKey,
-        },
       }
     );
-    const data = await response.json();
-    return {
-      status: response.status,
-      response: {
-        body: await response.text(),
-        bodyUsed: response.bodyUsed,
-        data: data ? (data as DeletesAnAccountingContactResponse) : null,
-        headers: response.headers,
-        ok: response.ok,
-        redirected: response.redirected,
-        status: response.status,
-        statusText: response.statusText,
-        type: response.type,
-        url: response.url,
-        size: response.size,
-      },
-    };
+    return Responder.validateResponse(response);
   }
 }
