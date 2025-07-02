@@ -298,3 +298,32 @@ export type sevClient = {
   id: string;
   objectName: "SevClient";
 };
+export type VoucherPosV1 = {
+  id: string;
+  objectName: "VoucherPos";
+  create: Date;
+  update: Date;
+  sevClient: sevClient;
+  voucher: {
+    id: string;
+    objectName: "Voucher";
+  };
+  accountingType: {
+    id: string;
+    objectName: "AccountingType";
+  };
+  estimatedAccountingType: {
+    id: string;
+    objectName: "AccountingType";
+  };
+  taxRate: string;
+  net: boolean;
+  isAsset: boolean;
+  sumNet: string;
+  sumTax: string;
+  sumGross: string;
+  sumNetAccounting: string;
+  sumTaxAccounting: string;
+  sumGrossAccounting: string;
+  comment: string | null;
+};
