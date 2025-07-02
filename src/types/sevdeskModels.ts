@@ -327,3 +327,67 @@ export type VoucherPosV1 = {
   sumGrossAccounting: string;
   comment: string | null;
 };
+export type VoucherV1 = {
+  id: string;
+  objectName: "Voucher";
+  mapAll: boolean;
+  create: Date;
+  update: Date;
+  sevClient: sevClient;
+  createUser: {
+    id: string;
+    objectName: "SevUser";
+  };
+  voucherDate: Date | null;
+  supplier: {
+    id: string;
+    objectName: "Contact";
+  } | null;
+  supplierName: string | null;
+  description: string | null;
+  document: {
+    id: string;
+    objectName: "Document";
+  } | null;
+  payDate: Date | null;
+  status: "50" | "100" | "1000";
+  sumNet: string;
+  sumTax: string;
+  sumGross: string;
+  sumNetAccounting: string;
+  sumTaxAccounting: string;
+  sumGrossAccounting: string;
+  sumDiscounts: string;
+  sumDiscountsForeignCurrency: string;
+  paidAmount: number | null;
+  taxType: string | null;
+  creditDebit: "C" | "D" | null;
+  costCentre: {
+    id: string;
+    objectName: "CostCentre";
+  };
+  voucherType: "VOU" | "RV" | null;
+  currency: string | null;
+  propertyForeignCurrenyDeadline: Date | null;
+  propertyExchangeRate: string | null;
+  recurringInterval:
+    | "P0Y0M1W"
+    | "P0Y0M2W"
+    | "P0Y1M0W"
+    | "P0Y3M0W"
+    | "P0Y6M0W"
+    | "P1Y0M0W"
+    | "P2Y0M0W"
+    | "P3Y0M0W"
+    | "P4Y0M0W"
+    | "P5Y0M0W"
+    | null;
+  recurringStartDate: Date | null;
+  recurringNextVoucher: Date | null;
+  recurringLastVoucher: Date | null;
+  recurringEndDate: Date | null;
+  enshrined: Date;
+  paymentDeadline: Date | null;
+  deliveryDate: Date;
+  deliveryDateUntil: Date | null;
+};
