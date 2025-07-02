@@ -1,46 +1,29 @@
-// Imports
-
-import fetch from "node-fetch";
-
 // Project-Imports
 
-import { IResponse } from "../types/Response.js";
-import { apiUrl } from "../index.js";
+import { IResponse, Responder } from "../types/Response.js";
 import { RetrieveBookkeepingSystemVersionResponse } from "./types/response.types.js";
 
 // Code
 
+/**
+ * This is a collection of basic sevdesk functions that don't really belong into any other category.
+ * @link https://api.sevdesk.de/#tag/Basics
+ */
 export class Basics {
-  constructor(private apiKey: string) {}
+  private Responder: Responder;
+  constructor(apiKey: string) {
+    this.Responder = new Responder(apiKey, "1");
+  }
   /**
    * To check if you already received the update to version 2.0 you can use this endpoint.
-   * @returns object
+   * @link https://api.sevdesk.de/#tag/Basics/operation/bookkeepingSystemVersion
+   * @returns The current version of your bookkeeping system. Possible values are "1.0" and "2.0"
    */
   async retrieveBookkeepingSystemVersion(): Promise<
     IResponse<RetrieveBookkeepingSystemVersionResponse>
   > {
-    const response = await fetch(`${apiUrl}/Tools/bookkeepingSystemVersion`, {
+    return this.Responder.process("/Tools/bookkeepingSystemVersion", {
       method: "GET",
-      headers: {
-        Authorization: this.apiKey,
-      },
     });
-    const data = await response.json();
-    return {
-      status: response.status,
-      response: {
-        body: await response.text(),
-        bodyUsed: response.bodyUsed,
-        data: data ? (data as RetrieveBookkeepingSystemVersionResponse) : null,
-        headers: response.headers,
-        ok: response.ok,
-        redirected: response.redirected,
-        status: response.status,
-        statusText: response.statusText,
-        type: response.type,
-        url: response.url,
-        size: response.size,
-      },
-    };
   }
 }
