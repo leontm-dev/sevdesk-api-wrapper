@@ -1,4 +1,26 @@
-export type createContactAddressBody = {
+// Project-Imports
+
+import { sevClient } from "../../types/sevdeskModels";
+
+// Code
+
+export type ContactAddress = {
+  /**
+   * The contact address id
+   */
+  id: number;
+  /**
+   * The contact address object name
+   */
+  objectName: string;
+  /**
+   * Date of contact address creation
+   */
+  create: Date;
+  /**
+   * Date of last contact address update
+   */
+  update: Date;
   /**
    * The contact to which this contact address belongs.
    */
@@ -15,15 +37,15 @@ export type createContactAddressBody = {
   /**
    * Street name
    */
-  street?: string | null;
+  street: string | null;
   /**
    * Zip code
    */
-  zip?: string | null;
+  zip: string | null;
   /**
    * City name
    */
-  city?: string | null;
+  city: string | null;
   /**
    * Country of the contact address.
 For all countries, send a GET to /StaticCountry
@@ -40,8 +62,7 @@ For all countries, send a GET to /StaticCountry
   };
   /**
    * Category of the contact address.
-For all categories, send a GET to /Category?objectType=ContactAddress.
-   */
+For all categories, send a GET to /Category?objectType=ContactAddress. */
   category: {
     /**
      * Unique identifier of the category
@@ -55,38 +76,21 @@ For all categories, send a GET to /Category?objectType=ContactAddress.
   /**
    * Name in address
    */
-  name?: string | null;
+  name: string | null;
+  /**
+   * Client to which contact address belongs. Will be filled automatically
+   */
+  sevClient: sevClient;
   /**
    * Second name in address
    */
-  name2?: string | null;
+  name2: string | null;
   /**
    * Third name in address
    */
-  name3?: string | null;
+  name3: string | null;
   /**
    * Fourth name in address
    */
-  name4?: string | null;
-};
-export type updateContactAddressBody = {
-  contact?: {
-    id: number;
-    objectName: "Contact";
-  } | null;
-  street?: string | null;
-  zip?: string | null;
-  city?: string | null;
-  country?: {
-    id: number;
-    objectName: "StaticCountry";
-  } | null;
-  category?: {
-    id: number;
-    objectName: "Category";
-  } | null;
-  name?: string | null;
-  name2?: string;
-  name3?: string | null;
-  name4?: string | null;
+  name4: string | null;
 };

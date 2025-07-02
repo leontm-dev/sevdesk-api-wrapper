@@ -1,130 +1,74 @@
-// Imports
-
-import fetch from "node-fetch";
-
 // Project-Imports
 
-import { apiUrl } from "../index.js";
-import { IResponse } from "../types/Response.js";
+import { IResponse, Responder } from "../types/Response.js";
 import {
-  CreateANewContactAddressBody,
-  UpdateAExistingContactAddressBody,
+  createContactAddressBody,
+  updateContactAddressBody,
 } from "./types/body.types.js";
 import {
-  CreateANewContactAddressResponse,
-  DeletesAContactAddressResponse,
-  FindContactAddressByIDResponse,
-  RetrieveContactAddressesResponse,
-  UpdateAExistingContactAddressResponse,
+  createContactAddressResponse,
+  deleteContactAddressResponse,
+  getContactAddressByIdResponse,
+  getContactAddressesResponse,
+  updateContactAddressResponse,
 } from "./types/response.types.js";
 
 // Code
 
+/**
+ * As one contact can have multiple addresses, they can not be part of the contact attributes.
+Instead, they have their own endpoint which makes it possible to create as many addresses for one contact as needed.
+For creating contact addresses have a look at our Swagger specification. Everything should be pretty straight forward.
+  * @link https://api.sevdesk.de/#tag/ContactAddress
+ */
 export class ContactAddress {
-  constructor(private apiKey: string) {}
+  private Responder: Responder;
+  constructor(apiKey: string) {
+    this.Responder = new Responder(apiKey, "1");
+  }
   /**
    * Creates a new contact address.
    * @link https://api.sevdesk.de/#tag/ContactAddress/operation/createContactAddress
    * @param body Creation data
    * @returns Returns created contact address
    */
-  async createANewContactAddress(
-    body: CreateANewContactAddressBody
-  ): Promise<IResponse<CreateANewContactAddressResponse>> {
-    const response = await fetch(`${apiUrl}/ContactAddress`, {
-      method: "POST",
+  async createContactAddress(
+    body: createContactAddressBody
+  ): Promise<IResponse<createContactAddressResponse>> {
+    return this.Responder.process("/ContactAddress", {
       headers: {
-        Authorization: this.apiKey,
         "Content-Type": "application/json",
       },
+      method: "POST",
       body: JSON.stringify(body),
     });
-    const data = await response.json();
-    return {
-      status: response.status,
-      response: {
-        ok: response.ok,
-        status: response.status,
-        statusText: response.statusText,
-        url: response.url,
-        data: data ? (data as CreateANewContactAddressResponse) : null,
-        body: response.body,
-        bodyUsed: response.bodyUsed,
-        headers: response.headers,
-        redirected: response.redirected,
-        type: response.type,
-        size: response.size,
-      },
-    };
   }
+
   /**
    * Retrieve all contact addresses
    * @link https://api.sevdesk.de/#tag/ContactAddress/operation/getContactAddresses
    * @returns Array of objects (Contact address)
    */
-  async retrieveContactAddresses(): Promise<
-    IResponse<RetrieveContactAddressesResponse>
-  > {
-    const response = await fetch(`${apiUrl}/ContactAddress`, {
-      headers: {
-        Authorization: this.apiKey,
-      },
+  async getContactAddresses(): Promise<IResponse<getContactAddressesResponse>> {
+    return this.Responder.process("/ContactAddress", {
       method: "GET",
     });
-    const data = await response.json();
-    return {
-      status: response.status,
-      response: {
-        ok: response.ok,
-        status: response.status,
-        statusText: response.statusText,
-        url: response.url,
-        data: data ? (data as RetrieveContactAddressesResponse) : null,
-        body: response.body,
-        bodyUsed: response.bodyUsed,
-        headers: response.headers,
-        redirected: response.redirected,
-        type: response.type,
-        size: response.size,
-      },
-    };
   }
+
   /**
    * Returns a single contact address
    * @link https://api.sevdesk.de/#tag/ContactAddress/operation/contactAddressId
    * @param contactAddressId ID of contact address to return
    * @returns
    */
-  async findContactAddressByID(
+  async getContactAddressById(
     contactAddressId: number
-  ): Promise<IResponse<FindContactAddressByIDResponse>> {
-    const response = await fetch(
-      `${apiUrl}/ContactAddress/${contactAddressId}`,
-      {
-        headers: {
-          Authorization: this.apiKey,
-        },
-        method: "GET",
-      }
-    );
-    const data = await response.json();
-    return {
-      status: response.status,
-      response: {
-        ok: response.ok,
-        status: response.status,
-        statusText: response.statusText,
-        url: response.url,
-        data: data ? (data as FindContactAddressByIDResponse) : null,
-        body: response.body,
-        bodyUsed: response.bodyUsed,
-        headers: response.headers,
-        redirected: response.redirected,
-        type: response.type,
-        size: response.size,
-      },
-    };
+  ): Promise<IResponse<getContactAddressByIdResponse>> {
+    return this.Responder.process(`/ContactAddress/${contactAddressId}`, {
+      method: "GET",
+    });
   }
+
   /**
    * update a existing contact address.
    * @link https://api.sevdesk.de/#tag/ContactAddress/operation/updateContactAddress
@@ -132,72 +76,29 @@ export class ContactAddress {
    * @param body Creation data
    * @returns Returns created contact address
    */
-  async updateAExistingContactAddress(
+  async updateContactAddress(
     contactAddressId: number,
-    body: UpdateAExistingContactAddressBody
-  ): Promise<IResponse<UpdateAExistingContactAddressResponse>> {
-    const response = await fetch(
-      `${apiUrl}/ContactAddress/${contactAddressId}`,
-      {
-        headers: {
-          Authorization: this.apiKey,
-          "Content-Type": "application/json",
-        },
-        method: "PUT",
-        body: JSON.stringify(body),
-      }
-    );
-    const data = await response.json();
-    return {
-      status: response.status,
-      response: {
-        ok: response.ok,
-        status: response.status,
-        statusText: response.statusText,
-        url: response.url,
-        data: data ? (data as UpdateAExistingContactAddressResponse) : null,
-        body: response.body,
-        bodyUsed: response.bodyUsed,
-        headers: response.headers,
-        redirected: response.redirected,
-        type: response.type,
-        size: response.size,
+    body: updateContactAddressBody
+  ): Promise<IResponse<updateContactAddressResponse>> {
+    return this.Responder.process(`/ContactAddress/${contactAddressId}`, {
+      headers: {
+        "Content-Type": "application/json",
       },
-    };
+      method: "PUT",
+      body: JSON.stringify(body),
+    });
   }
+
   /**
    * @link https://api.sevdesk.de/#tag/ContactAddress/operation/deleteContactAddress
    * @param contactAddressId Id of contact address resource to delete
    * @returns contact address deleted
    */
-  async deletesAContactAddress(
+  async deleteContactAddress(
     contactAddressId: number
-  ): Promise<IResponse<DeletesAContactAddressResponse>> {
-    const response = await fetch(
-      `${apiUrl}/ContactAddress/${contactAddressId}`,
-      {
-        headers: {
-          Authorization: this.apiKey,
-        },
-        method: "DELETE",
-      }
-    );
-    const data = await response.json();
-    return {
-      status: response.status,
-      response: {
-        ok: response.ok,
-        status: response.status,
-        statusText: response.statusText,
-        url: response.url,
-        data: data ? (data as DeletesAContactAddressResponse) : null,
-        body: response.body,
-        bodyUsed: response.bodyUsed,
-        headers: response.headers,
-        redirected: response.redirected,
-        type: response.type,
-        size: response.size,
-      },
-    };
+  ): Promise<IResponse<deleteContactAddressResponse>> {
+    return this.Responder.process(`/ContactAddress/${contactAddressId}`, {
+      method: "DELETE",
+    });
   }
 }

@@ -1,17 +1,17 @@
 // Project-Imports
 
-import { ContactAddress } from "../../types/sevdeskModels.js";
+import { ContactAddress } from "./base.types";
 
 // Code
 
-export type CreateANewContactAddressResponse = ContactAddress;
-export type RetrieveContactAddressesResponse = {
+export type createContactAddressResponse = ContactAddress;
+export type getContactAddressesResponse = {
   objects: ContactAddress[];
 };
-export type FindContactAddressByIDResponse = {
+export type getContactAddressByIdResponse = {
   objects: ContactAddress[];
 };
-export type UpdateAExistingContactAddressResponse = ContactAddress;
-export type DeletesAContactAddressResponse = {
+export type updateContactAddressResponse = ContactAddress;
+export type deleteContactAddressResponse = {
   objects: [null];
 };
