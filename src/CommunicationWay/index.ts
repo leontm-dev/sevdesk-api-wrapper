@@ -16,6 +16,25 @@ import {
 
 // Code
 
+/**
+ * A communication way is a medium with which a contact can be reached out to.
+This can be:
+
+A phone number (landline or mobile),
+An email,
+A website.
+They can not be a part of the contact attributes for the same reason as addresses.
+Each communication way also is of one of the following types, called communication way keys, which are also their own resource:
+Private (ID: 1),
+Work (ID: 2),
+Fax (ID: 3),
+Mobile (ID: 4),
+Empty (ID: 5),
+Autobox (ID: 6),
+Newsletter (ID: 7),
+Invoicing (ID: 8)
+  * @link https://api.sevdesk.de/#tag/CommunicationWay
+ */
 export class CommunicationWay {
   private Responder: Responder;
   constructor(apiKey: string) {
