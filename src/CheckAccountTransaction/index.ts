@@ -1,30 +1,35 @@
-// Imports
-
-import fetch from "node-fetch";
-
 // Project-Imports
 
-import { IResponse } from "../types/Response.js";
-import { apiUrl } from "../index.js";
+import { IResponse, Responder } from "../types/Response.js";
 import {
-  RetrieveTransactionsResponse,
-  CreateANewTransactionResponse,
-  DeleteATransactionResponse,
-  FindCheckAccountTransactionByIDResponse,
-  UpdateAnExistingTransactionResponse,
-  EnshrineResponse,
+  getTransactionResponse,
+  createTransactionResponse,
+  updateCheckAccountTransactionResponse,
+  deleteCheckAccountTransactionResponse,
+  enshrineResponse,
+  getCheckAccountTransactionByIdResponse,
 } from "./types/response.types.js";
 import {
-  CreateANewTransactionBody,
-  UpdateAnExistingTransactionBody,
+  createTransactionBody,
+  updateCheckAccountTransactionBody,
 } from "./types/body.types.js";
 
 // Code
 
+/**
+ * A check account transaction is a payment on a check account from or to the customer.
+They are essential for booking invoices, vouchers (receipts) and credit notes with them to mark them as paid.
+For a correct bookkeeping, there is always one or multiple transactions linked to an invoice, a voucher or a credit note, until the relevant object is completely paid.
+  * @link https://api.sevdesk.de/#tag/CheckAccountTransaction
+ */
 export class CheckAccountTransaction {
-  constructor(private apiKey: string) {}
+  private Responder: Responder;
+  constructor(apiKey: string) {
+    this.Responder = new Responder(apiKey, "1");
+  }
   /**
    * Retrieve all transactions depending on the filters defined in the query.
+   * @link https://api.sevdesk.de/#tag/CheckAccountTransaction/operation/getTransactions
    * @param checkAccountId Retrieve all transactions on this check account. Must be provided with checkAccount[objectName]
    * @param isBooked Only retrieve booked transactions
    * @param paymtPurpose Only retrieve transactions with this payment purpose
@@ -35,7 +40,7 @@ export class CheckAccountTransaction {
    * @param onlyDebit Only retrieve debit transactions
    * @returns Array of objects (CheckAccountTransaction model)
    */
-  async retrieveTransactions(
+  async getTransactions(
     checkAccountId?: number,
     isBooked?: boolean,
     paymtPurpose?: string,
@@ -44,225 +49,141 @@ export class CheckAccountTransaction {
     payeePayerName?: string,
     onlyCredit?: boolean,
     onlyDebit?: boolean
-  ): Promise<IResponse<RetrieveTransactionsResponse>> {
-    const query = [];
-    if (checkAccountId)
-      query.push(
-        `checkAccount[id]=${checkAccountId}&=checkAccount[objectName]=CheckAccount`
-      );
-    if (isBooked) query.push(`isBooked=${isBooked}`);
-    if (paymtPurpose) query.push(`paymtPurpose=${paymtPurpose}`);
-    if (startDate) query.push(`startDate=${startDate}`);
-    if (endDate) query.push(`endDate=${endDate}`);
-    if (payeePayerName) query.push(`payeePayerName=${payeePayerName}`);
-    if (onlyCredit) query.push(`onlyCredit=${onlyCredit}`);
-    if (onlyDebit) query.push(`onlyDebit=${onlyDebit}`);
-
-    const response = await fetch(
-      `${apiUrl}/CheckAccountTransaction?${query.join("&")}`,
+  ): Promise<IResponse<getTransactionResponse>> {
+    return this.Responder.process(
+      "/CheckAccountTransaction",
       {
         method: "GET",
-        headers: {
-          Authorization: this.apiKey,
-        },
-      }
-    );
-    const data = await response.json();
-    return {
-      status: response.status,
-      response: {
-        body: await response.text(),
-        bodyUsed: response.bodyUsed,
-        data: data ? (data as RetrieveTransactionsResponse) : null,
-        headers: response.headers,
-        ok: response.ok,
-        redirected: response.redirected,
-        status: response.status,
-        statusText: response.statusText,
-        type: response.type,
-        url: response.url,
-        size: response.size,
       },
-    };
+      [
+        {
+          key: "checkAccount[id]",
+          value: checkAccountId,
+        },
+        {
+          key: "checkAccount[objectName]",
+          value: "CheckAccount",
+        },
+        {
+          key: "isBooked",
+          value: isBooked,
+        },
+        {
+          key: "paymtPurpose",
+          value: paymtPurpose,
+        },
+        {
+          key: "startDate",
+          value: startDate ? startDate.toISOString() : undefined,
+        },
+        {
+          key: "endDate",
+          value: endDate ? endDate.toISOString() : undefined,
+        },
+        {
+          key: "payeePayerName",
+          value: payeePayerName,
+        },
+        {
+          key: "onlyCredit",
+          value: onlyCredit,
+        },
+        {
+          key: "onlyDebit",
+          value: onlyDebit,
+        },
+      ]
+    );
   }
+
   /**
    * Creates a new transaction on a check account.
+   * @link https://api.sevdesk.de/#tag/CheckAccountTransaction/operation/createTransaction
    * @param body Creation data. Please be aware, that you need to provide at least all required parameter of the CheckAccountTransaction model!
    */
-  async createANewTransaction(
-    body: CreateANewTransactionBody
-  ): Promise<IResponse<CreateANewTransactionResponse>> {
-    const response = await fetch(`${apiUrl}/CheckAccountTransaction`, {
+  async createTransaction(
+    body: createTransactionBody
+  ): Promise<IResponse<createTransactionResponse>> {
+    return this.Responder.process("/CheckAccountTransaction", {
       method: "POST",
       headers: {
-        Authorization: this.apiKey,
         "Content-Type": "application/json",
       },
       body: JSON.stringify(body),
     });
-    const data = await response.json();
-    return {
-      status: response.status,
-      response: {
-        body: await response.text(),
-        bodyUsed: response.bodyUsed,
-        data: data ? (data as CreateANewTransactionResponse) : null,
-        headers: response.headers,
-        ok: response.ok,
-        redirected: response.redirected,
-        status: response.status,
-        statusText: response.statusText,
-        type: response.type,
-        url: response.url,
-        size: response.size,
-      },
-    };
   }
+
   /**
    * Retrieve an existing check account transaction
+   * @link https://api.sevdesk.de/#tag/CheckAccountTransaction/operation/getCheckAccountTransactionById
    * @param checkAccountTransactionId ID of check account transaction
    * @returns Array of objects (CheckAccountTransaction model)
    */
-  async findCheckAccountTransactionByID(
+  async getCheckAccountTransactionById(
     checkAccountTransactionId: number
-  ): Promise<IResponse<FindCheckAccountTransactionByIDResponse>> {
-    const response = await fetch(
-      `${apiUrl}/CheckAccountTransaction/${checkAccountTransactionId}`,
+  ): Promise<IResponse<getCheckAccountTransactionByIdResponse>> {
+    return this.Responder.process(
+      `/CheckAccountTransaction/${checkAccountTransactionId}`,
       {
         method: "GET",
-        headers: {
-          Authorization: this.apiKey,
-        },
       }
     );
-    const data = await response.json();
-    return {
-      status: response.status,
-      response: {
-        body: await response.text(),
-        bodyUsed: response.bodyUsed,
-        data: data ? (data as FindCheckAccountTransactionByIDResponse) : null,
-        headers: response.headers,
-        ok: response.ok,
-        redirected: response.redirected,
-        status: response.status,
-        statusText: response.statusText,
-        type: response.type,
-        url: response.url,
-        size: response.size,
-      },
-    };
   }
+
   /**
    * Update a check account transaction
+   * @link https://api.sevdesk.de/#tag/CheckAccountTransaction/operation/updateCheckAccountTransaction
    * @param checkAccountTransactionId ID of check account to update transaction
    * @param body Update data
    * @returns Return changed check account resource
    */
-  async updateAnExistingCheckAccountTransaction(
+  async updateCheckAccountTransaction(
     checkAccountTransactionId: number,
-    body: UpdateAnExistingTransactionBody
-  ): Promise<IResponse<UpdateAnExistingTransactionResponse>> {
-    const response = await fetch(
-      `${apiUrl}/CheckAccountTransaction/${checkAccountTransactionId}`,
+    body: updateCheckAccountTransactionBody
+  ): Promise<IResponse<updateCheckAccountTransactionResponse>> {
+    return this.Responder.process(
+      `/CheckAccountTransaction/${checkAccountTransactionId}`,
       {
         method: "PUT",
         headers: {
-          Authorization: this.apiKey,
           "Content-Type": "application/json",
         },
         body: JSON.stringify(body),
       }
     );
-    const data = await response.json();
-    return {
-      status: response.status,
-      response: {
-        body: await response.text(),
-        bodyUsed: response.bodyUsed,
-        data: data ? (data as UpdateAnExistingTransactionResponse) : null,
-        headers: response.headers,
-        ok: response.ok,
-        redirected: response.redirected,
-        status: response.status,
-        statusText: response.statusText,
-        type: response.type,
-        url: response.url,
-        size: response.size,
-      },
-    };
   }
   /**
-   *
+   * @link https://api.sevdesk.de/#tag/CheckAccountTransaction/operation/deleteCheckAccountTransaction
    * @param checkAccountTransactionId Id of check account transaction to delete
    * @returns check account transaction deleted
    */
-  async deletesACheckAccountTransaction(
+  async deleteCheckAccountTransaction(
     checkAccountTransactionId: number
-  ): Promise<IResponse<DeleteATransactionResponse>> {
-    const response = await fetch(
-      `${apiUrl}/CheckAccountTransaction/${checkAccountTransactionId}`,
+  ): Promise<IResponse<deleteCheckAccountTransactionResponse>> {
+    return this.Responder.process(
+      `/CheckAccountTransaction/${checkAccountTransactionId}`,
       {
         method: "DELETE",
-        headers: {
-          Authorization: this.apiKey,
-        },
       }
     );
-    const data = await response.json();
-    return {
-      status: response.status,
-      response: {
-        body: await response.text(),
-        bodyUsed: response.bodyUsed,
-        data: data ? (data as DeleteATransactionResponse) : null,
-        headers: response.headers,
-        ok: response.ok,
-        redirected: response.redirected,
-        status: response.status,
-        statusText: response.statusText,
-        type: response.type,
-        url: response.url,
-        size: response.size,
-      },
-    };
   }
   /**
    * Sets the current date and time as a value for the property enshrined.
 This operation is only possible if the status is "Linked" ("status": "200") or higher.
 
 Linked invoices, credit notes or vouchers cannot be changed when the transaction is enshrined.
-   * @param checkAccountTransactionId 
+  * @link https://api.sevdesk.de/#tag/CheckAccountTransaction/operation/checkAccountTransactionEnshrine
+   * @param checkAccountTransactionId ID of the transaction to enshrine
    * @returns ID of the transaction to enshrine
    */
   async enshrine(
     checkAccountTransactionId: number
-  ): Promise<IResponse<EnshrineResponse>> {
-    const response = await fetch(
-      `${apiUrl}/CheckAccountTransaction/${checkAccountTransactionId}/enshrine`,
+  ): Promise<IResponse<enshrineResponse>> {
+    return this.Responder.process(
+      `/CheckAccountTransaction/${checkAccountTransactionId}/enshrine`,
       {
         method: "POST",
-        headers: {
-          Authorization: this.apiKey,
-        },
       }
     );
-    const data = await response.json();
-    return {
-      status: response.status,
-      response: {
-        body: await response.text(),
-        bodyUsed: response.bodyUsed,
-        data: data ? (data as EnshrineResponse) : null,
-        headers: response.headers,
-        ok: response.ok,
-        redirected: response.redirected,
-        status: response.status,
-        statusText: response.statusText,
-        type: response.type,
-        url: response.url,
-        size: response.size,
-      },
-    };
   }
 }
