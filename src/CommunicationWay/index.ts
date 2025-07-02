@@ -1,28 +1,26 @@
-// Imports
-
-import fetch from "node-fetch";
-
 // Project-Imports
 
-import { apiUrl } from "../index.js";
-import { IResponse } from "../types/Response.js";
+import { IResponse, Responder } from "../types/Response.js";
 import {
-  CreateANewContactCommunicationWayResponse,
-  DeletesACommunicationWayResponse,
-  FindCommunicationWayByIDResponse,
-  RetrieveCommunicationWayKeysResponse,
-  RetrieveCommunicationWaysResponse,
-  UpdateAExistingCommunicationWayResponse,
+  createCommunicationWayResponse,
+  deleteCommunicationWayResponse,
+  getCommunicationWayByIdResponse,
+  getCommunicationWayKeysResponse,
+  getCommunicationWaysResponse,
+  updateCommunicationWayResponse,
 } from "./types/response.types.js";
 import {
-  CreateANewContactCommunicationWayBody,
-  UpdateAExistingCommunicationWayBody,
+  createCommunicationWayBody,
+  updateCommunicationWayBody,
 } from "./types/body.types.js";
 
 // Code
 
 export class CommunicationWay {
-  constructor(private apiKey: string) {}
+  private Responder: Responder;
+  constructor(apiKey: string) {
+    this.Responder = new Responder(apiKey, "1");
+  }
   /**
    * Returns all communication ways which have been added up until now. Filters can be added.
    * @link https://api.sevdesk.de/#tag/CommunicationWay/operation/getCommunicationWays
@@ -31,154 +29,82 @@ export class CommunicationWay {
    * @param main Define if you only want the main communication way.
    * @returns Array of objects (CommunicationWay model)
    */
-  async retrieveCommunicationWays(
+  async getCommunicationWays(
     contactId?: string,
     type?: "PHONE" | "EMAIL" | "WEB" | "MOBILE",
     main?: "0" | "1"
-  ): Promise<IResponse<RetrieveCommunicationWaysResponse>> {
-    const query = [];
-    if (contactId) {
-      query.push(`contact[id]=${contactId}&contact[objectName]=Contact`);
-    }
-    if (type) {
-      query.push(`type=${type}`);
-    }
-    if (main) {
-      query.push(`main=${main}`);
-    }
-    const response = await fetch(
-      `${apiUrl}/CommunicationWay?{${query.join("&")}}`,
+  ): Promise<IResponse<getCommunicationWaysResponse>> {
+    return this.Responder.process(
+      "/CommunicationWay",
       {
         method: "GET",
-        headers: {
-          Authorization: this.apiKey,
-        },
-      }
-    );
-    const data = await response.json();
-    return {
-      status: response.status,
-      response: {
-        body: response.body,
-        headers: response.headers,
-        data: data ? (data as RetrieveCommunicationWaysResponse) : null,
-        ok: response.ok,
-        redirected: response.redirected,
-        status: response.status,
-        statusText: response.statusText,
-        type: response.type,
-        url: response.url,
-        bodyUsed: response.bodyUsed,
-        size: response.size,
       },
-    };
+      [
+        {
+          key: "contact[id]",
+          value: contactId,
+        },
+        {
+          key: "contact[objectName]",
+          value: "Contact",
+        },
+        {
+          key: "type",
+          value: type,
+        },
+        {
+          key: "main",
+          value: main,
+        },
+      ]
+    );
   }
+
   /**
    * Creates a new contact communication way.
    * @link https://api.sevdesk.de/#tag/CommunicationWay/operation/createCommunicationWay
    * @param body Creation data
    * @returns Returns created contact communication way
    */
-  async createANewContactCommunicationWay(
-    body: CreateANewContactCommunicationWayBody
-  ): Promise<IResponse<CreateANewContactCommunicationWayResponse>> {
-    const response = await fetch(`${apiUrl}/CommunicationWay`, {
+  async createCommunicationWay(
+    body: createCommunicationWayBody
+  ): Promise<IResponse<createCommunicationWayResponse>> {
+    return this.Responder.process("/CommunicationWay", {
       method: "POST",
       headers: {
-        Authorization: this.apiKey,
         "Content-Type": "application/json",
       },
       body: JSON.stringify(body),
     });
-    const data = await response.json();
-    return {
-      status: response.status,
-      response: {
-        body: response.body,
-        headers: response.headers,
-        data: data ? (data as CreateANewContactCommunicationWayResponse) : null,
-        ok: response.ok,
-        redirected: response.redirected,
-        status: response.status,
-        statusText: response.statusText,
-        type: response.type,
-        url: response.url,
-        bodyUsed: response.bodyUsed,
-        size: response.size,
-      },
-    };
   }
+
   /**
    * Returns a single communication way
    * @link https://api.sevdesk.de/#tag/CommunicationWay/operation/getCommunicationWayById
    * @param communicationWayId ID of communication way to return
    * @returns Array of objects (CommunicationWay model)
    */
-  async findCommunicationWayByID(
+  async getCommunicationWayById(
     communicationWayId: number
-  ): Promise<IResponse<FindCommunicationWayByIDResponse>> {
-    const response = await fetch(
-      `${apiUrl}/CommunicationWay/${communicationWayId}`,
-      {
-        method: "GET",
-        headers: {
-          Authorization: this.apiKey,
-        },
-      }
-    );
-    const data = await response.json();
-    return {
-      status: response.status,
-      response: {
-        body: response.body,
-        headers: response.headers,
-        data: data ? (data as FindCommunicationWayByIDResponse) : null,
-        ok: response.ok,
-        redirected: response.redirected,
-        status: response.status,
-        statusText: response.statusText,
-        type: response.type,
-        url: response.url,
-        bodyUsed: response.bodyUsed,
-        size: response.size,
-      },
-    };
+  ): Promise<IResponse<getCommunicationWayByIdResponse>> {
+    return this.Responder.process(`/CommunicationWay/${communicationWayId}`, {
+      method: "GET",
+    });
   }
+
   /**
    * @link https://api.sevdesk.de/#tag/CommunicationWay/operation/deleteCommunicationWay
    * @param communicationWayId Id of communication way resource to delete
    * @returns Communication way deleted
    */
-  async deletesACommunicationWay(
+  async deleteCommunicationWay(
     communicationWayId: number
-  ): Promise<IResponse<DeletesACommunicationWayResponse>> {
-    const response = await fetch(
-      `${apiUrl}/CommunicationWay/${communicationWayId}`,
-      {
-        method: "DELETE",
-        headers: {
-          Authorization: this.apiKey,
-        },
-      }
-    );
-    const data = await response.json();
-    return {
-      status: response.status,
-      response: {
-        body: response.body,
-        headers: response.headers,
-        data: data ? (data as DeletesACommunicationWayResponse) : null,
-        ok: response.ok,
-        redirected: response.redirected,
-        status: response.status,
-        statusText: response.statusText,
-        type: response.type,
-        url: response.url,
-        bodyUsed: response.bodyUsed,
-        size: response.size,
-      },
-    };
+  ): Promise<IResponse<deleteCommunicationWayResponse>> {
+    return this.Responder.process(`/CommunicationWay/${communicationWayId}`, {
+      method: "DELETE",
+    });
   }
+
   /**
    * Update a communication way
    * @link https://api.sevdesk.de/#tag/CommunicationWay/operation/UpdateCommunicationWay
@@ -186,69 +112,29 @@ export class CommunicationWay {
    * @param body Update data
    * @returns Returns changed CommunicationWay resource
    */
-  async updateAExistingCommunicationWay(
+  async updateCommunicationWay(
     communicationWayId: number,
-    body: UpdateAExistingCommunicationWayBody
-  ): Promise<IResponse<UpdateAExistingCommunicationWayResponse>> {
-    const response = await fetch(
-      `${apiUrl}/CommunicationWay/${communicationWayId}`,
-      {
-        method: "PUT",
-        headers: {
-          Authorization: this.apiKey,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(body),
-      }
-    );
-    const data = await response.json();
-    return {
-      status: response.status,
-      response: {
-        body: response.body,
-        headers: response.headers,
-        data: data ? (data as UpdateAExistingCommunicationWayResponse) : null,
-        ok: response.ok,
-        redirected: response.redirected,
-        status: response.status,
-        statusText: response.statusText,
-        type: response.type,
-        url: response.url,
-        bodyUsed: response.bodyUsed,
-        size: response.size,
+    body: updateCommunicationWayBody
+  ): Promise<IResponse<updateCommunicationWayResponse>> {
+    return this.Responder.process(`/CommunicationWay/${communicationWayId}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
       },
-    };
+      body: JSON.stringify(body),
+    });
   }
+
   /**
    * Returns all communication way keys.
    * @link https://api.sevdesk.de/#tag/CommunicationWay/operation/getCommunicationWayKeys
    * @returns Array of objects
    */
-  async retrieveCommunicationWayKeys(): Promise<
-    IResponse<RetrieveCommunicationWayKeysResponse>
+  async getCommunicationWayKeys(): Promise<
+    IResponse<getCommunicationWayKeysResponse>
   > {
-    const response = await fetch(`${apiUrl}/CommunicationWayKey`, {
+    return this.Responder.process("/CommunicationWayKey", {
       method: "GET",
-      headers: {
-        Authorization: this.apiKey,
-      },
     });
-    const data = await response.json();
-    return {
-      status: response.status,
-      response: {
-        body: response.body,
-        headers: response.headers,
-        data: data ? (data as RetrieveCommunicationWayKeysResponse) : null,
-        ok: response.ok,
-        redirected: response.redirected,
-        status: response.status,
-        statusText: response.statusText,
-        type: response.type,
-        url: response.url,
-        bodyUsed: response.bodyUsed,
-        size: response.size,
-      },
-    };
   }
 }

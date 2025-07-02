@@ -1,12 +1,34 @@
-export type createCommunicationWayBody = {
+// Project-Imports
+
+import { sevClient } from "../../types/sevdeskModels";
+
+// Code
+
+export type CommunicationWay = {
+  /**
+   * The communication way id
+   */
+  id: string;
+  /**
+   * The communication way object name
+   */
+  objectName: string;
+  /**
+   * Date of communication way creation
+   */
+  create: Date;
+  /**
+   * Date of last communication way update
+   */
+  update: Date;
   /**
    * The contact to which this communication way belongs.
    */
-  contact?: {
+  contact: {
     /**
      * Unique identifier of the contact
      */
-    id: number;
+    id: string;
     /**
      * Model name, which is 'Contact'
      */
@@ -15,7 +37,7 @@ export type createCommunicationWayBody = {
   /**
    * Type of the communication way
    */
-  type: "PHONE" | "EMAIL" | "WEB" | "MOBILE";
+  type: "EMAIL" | "PHONE" | "WEB" | "MOBILE";
   /**
    * The value of the communication way.
 For example the phone number, e-mail address or website.
@@ -30,7 +52,7 @@ For all communication way keys please send a GET to /CommunicationWayKey.
     /**
      * Unique identifier of the key
      */
-    id: number;
+    id: string;
     /**
      * Model name, which is 'CommunicationWayKey'
      */
@@ -39,18 +61,9 @@ For all communication way keys please send a GET to /CommunicationWayKey.
   /**
    * Defines whether the communication way is the main communication way for the contact.
    */
-  main?: boolean | null;
-};
-export type updateCommunicationWayBody = {
-  contact?: {
-    id: number;
-    objectName: "Contact";
-  } | null;
-  type?: "PHONE" | "EMAIL" | "WEB" | "MOBILE";
-  value?: string;
-  key?: {
-    id: number;
-    objectName: "CommunicationWayKey";
-  } | null;
-  main?: boolean | null;
+  main: string;
+  /**
+   * Client to which communication way key belongs. Will be filled automatically
+   */
+  sevClient: sevClient;
 };
