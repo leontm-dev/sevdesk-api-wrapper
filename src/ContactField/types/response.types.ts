@@ -1,36 +1,33 @@
 // Project-Imports
 
-import {
-  ContactCustomFieldSetting,
-  ContactField,
-} from "../../types/sevdeskModels.js";
+import { ContactField, ContactCustomFieldSetting } from "./base.types";
 
 // Code
 
-export type RetrievePlaceholdersResponse = {
+export type getPlaceholderResponse = {
   objects: { key: string; value: { key: string; value: string }[] }[];
 };
-export type RetrieveContactFieldsResponse = {
+export type getContactFieldsResponse = {
   objects: ContactField[];
 };
-export type CreateContactFieldResponse = ContactField;
-export type UpdateAContactFieldResponse = ContactField;
-export type DeleteAContactFieldResponse = {
+export type createContactFieldResponse = ContactField;
+export type updateContactFieldResponse = ContactField;
+export type deleteContactFieldResponse = {
   objects: [null];
 };
-export type RetrieveContactFieldSettingsResponse = {
+export type getContactFieldSettingsResponse = {
   objects: ContactCustomFieldSetting[];
 };
-export type CreateContactFieldSettingResponse = {
+export type createContactFieldSettingResponse = {
   objects: ContactCustomFieldSetting[];
 };
-export type FindContactFieldSettingByIDResponse = {
+export type getContactFieldSettingByIdResponse = {
   objects: ContactCustomFieldSetting[];
 };
-export type UpdateContactFieldSettingResponse = ContactCustomFieldSetting;
-export type DeletesAContactFieldSettingResponse = {
+export type updateContactFieldSettingResponse = ContactCustomFieldSetting;
+export type deleteContactFieldSettingResponse = {
   objects: [null];
 };
-export type ReceiveCountReferenceResponse = {
+export type getReferenceCountResponse = {
   objects: number;
 };

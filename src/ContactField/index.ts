@@ -1,35 +1,37 @@
-// Imports
-
-import fetch from "node-fetch";
-
 // Project-Imports
 
-import { IResponse } from "../types/Response.js";
-import { apiUrl } from "../index.js";
+import { IResponse, Responder } from "../types/Response.js";
 import {
-  CreateContactFieldResponse,
-  CreateContactFieldSettingResponse,
-  DeleteAContactFieldResponse,
-  DeletesAContactFieldSettingResponse,
-  FindContactFieldSettingByIDResponse,
-  ReceiveCountReferenceResponse,
-  RetrieveContactFieldSettingsResponse,
-  RetrieveContactFieldsResponse,
-  RetrievePlaceholdersResponse,
-  UpdateAContactFieldResponse,
-  UpdateContactFieldSettingResponse,
+  createContactFieldResponse,
+  createContactFieldSettingResponse,
+  deleteContactFieldResponse,
+  deleteContactFieldSettingResponse,
+  getContactFieldSettingByIdResponse,
+  getContactFieldSettingsResponse,
+  getContactFieldsResponse,
+  getPlaceholderResponse,
+  getReferenceCountResponse,
+  updateContactFieldResponse,
+  updateContactFieldSettingResponse,
 } from "./types/response.types.js";
 import {
-  CreateContactFieldBody,
-  CreateContactFieldSettingBody,
-  UpdateAContactFieldBody,
-  UpdateContactFieldSettingBody,
+  createContactFieldBody,
+  createContactFieldSettingBody,
+  updateContactFieldBody,
+  updateContactFieldSettingBody,
 } from "./types/body.types.js";
 
 // Code
 
+/**
+ * The contact fields are placeholders that can be titled and filled per contact. The contact fields can then be used in invoices, credit notes and emails.
+ * @link https://api.sevdesk.de/#tag/ContactField
+ */
 export class ContactField {
-  constructor(private apiKey: string) {}
+  private Responder: Responder;
+  constructor(apiKey: string) {
+    this.Responder = new Responder(apiKey, "1");
+  }
   /**
    * Retrieve all Placeholders
    * @link https://api.sevdesk.de/#tag/ContactField/operation/getPlaceholder
@@ -37,7 +39,7 @@ export class ContactField {
    * @param subObjectName Sub model name, required if you have "Email" at objectName
    * @returns Array of objects (Textparser fetchDictionaryEntriesByType model)
    */
-  async retrievePlaceholders(
+  async getPlaceholder(
     objectName:
       | "Invoice"
       | "CreditNote"
@@ -46,69 +48,36 @@ export class ContactField {
       | "Letter"
       | "Email",
     subObjectName?: "Invoice" | "CreditNote" | "Order" | "Contact" | "Letter"
-  ): Promise<IResponse<RetrievePlaceholdersResponse>> {
-    const query = [];
-    query.push(`objectName=${objectName}`);
-    if (subObjectName) query.push(`subObjectName=${subObjectName}`);
-    const response = await fetch(
-      `${apiUrl}/Textparser/fetchDictionaryEntriesByType?${query.join("&")}`,
+  ): Promise<IResponse<getPlaceholderResponse>> {
+    return this.Responder.process(
+      `/Textparser/fetchDictionaryEntriesByType`,
       {
         method: "GET",
-        headers: {
-          Authorization: this.apiKey,
-        },
-      }
-    );
-    const data = await response.json();
-    return {
-      status: response.status,
-      response: {
-        ok: response.ok,
-        status: response.status,
-        statusText: response.statusText,
-        url: response.url,
-        data: data ? (data as RetrievePlaceholdersResponse) : null,
-        body: response.body,
-        bodyUsed: response.bodyUsed,
-        headers: response.headers,
-        redirected: response.redirected,
-        type: response.type,
-        size: response.size,
       },
-    };
+      [
+        {
+          key: "objectName",
+          value: objectName,
+        },
+        {
+          key: "subObjectName",
+          value: subObjectName,
+        },
+      ]
+    );
   }
+
   /**
    * Retrieve all contact fields
    * @link https://api.sevdesk.de/#tag/ContactField/operation/getContactFields
    * @returns Array of objects (contact fields model)
    */
-  async retrieveContactFields(): Promise<
-    IResponse<RetrieveContactFieldsResponse>
-  > {
-    const response = await fetch(`${apiUrl}/ContactCustomField`, {
+  async getContactFields(): Promise<IResponse<getContactFieldsResponse>> {
+    return this.Responder.process(`/ContactCustomField`, {
       method: "GET",
-      headers: {
-        Authorization: this.apiKey,
-      },
     });
-    const data = await response.json();
-    return {
-      status: response.status,
-      response: {
-        ok: response.ok,
-        status: response.status,
-        statusText: response.statusText,
-        url: response.url,
-        data: data ? (data as RetrieveContactFieldsResponse) : null,
-        body: response.body,
-        bodyUsed: response.bodyUsed,
-        headers: response.headers,
-        redirected: response.redirected,
-        type: response.type,
-        size: response.size,
-      },
-    };
   }
+
   /**
    * Create contact field
    * @link https://api.sevdesk.de/#tag/ContactField/operation/createContactField
@@ -116,34 +85,17 @@ export class ContactField {
    * @returns
    */
   async createContactField(
-    body: CreateContactFieldBody
-  ): Promise<IResponse<CreateContactFieldResponse>> {
-    const response = await fetch(`${apiUrl}/ContactCustomField`, {
+    body: createContactFieldBody
+  ): Promise<IResponse<createContactFieldResponse>> {
+    return this.Responder.process(`/ContactCustomField`, {
       method: "POST",
       headers: {
-        Authorization: this.apiKey,
         "Content-Type": "application/json",
       },
       body: JSON.stringify(body),
     });
-    const data = await response.json();
-    return {
-      status: response.status,
-      response: {
-        ok: response.ok,
-        status: response.status,
-        statusText: response.statusText,
-        url: response.url,
-        data: data ? (data as CreateContactFieldResponse) : null,
-        body: response.body,
-        bodyUsed: response.bodyUsed,
-        headers: response.headers,
-        redirected: response.redirected,
-        type: response.type,
-        size: response.size,
-      },
-    };
   }
+
   /**
    * Update a contact field
    * @link https://api.sevdesk.de/#tag/ContactField/operation/updateContactfield
@@ -151,106 +103,51 @@ export class ContactField {
    * @param body Update data
    * @returns
    */
-  async updateAContactField(
+  async updateContactField(
     contactCustomFieldId: number,
-    body: UpdateAContactFieldBody
-  ): Promise<IResponse<UpdateAContactFieldResponse>> {
-    const response = await fetch(
-      `${apiUrl}/ContactCustomField/${contactCustomFieldId}`,
+    body: updateContactFieldBody
+  ): Promise<IResponse<updateContactFieldResponse>> {
+    return this.Responder.process(
+      `/ContactCustomField/${contactCustomFieldId}`,
       {
+        method: "PUT",
         headers: {
-          Authorization: this.apiKey,
           "Content-Type": "application/json",
         },
-        method: "PUT",
         body: JSON.stringify(body),
       }
     );
-    const data = await response.json();
-    return {
-      status: response.status,
-      response: {
-        ok: response.ok,
-        status: response.status,
-        statusText: response.statusText,
-        url: response.url,
-        data: data ? (data as UpdateAContactFieldResponse) : null,
-        body: response.body,
-        bodyUsed: response.bodyUsed,
-        headers: response.headers,
-        redirected: response.redirected,
-        type: response.type,
-        size: response.size,
-      },
-    };
   }
+
   /**
    * @link https://api.sevdesk.de/#tag/ContactField/operation/deleteContactCustomFieldId
    * @param contactCustomFieldId Id of contact field
    * @returns
    */
-  async deleteAContactField(
+  async deleteContactField(
     contactCustomFieldId: number
-  ): Promise<IResponse<DeleteAContactFieldResponse>> {
-    const response = await fetch(
-      `${apiUrl}/ContactCustomField/${contactCustomFieldId}`,
+  ): Promise<IResponse<deleteContactFieldResponse>> {
+    return this.Responder.process(
+      `/ContactCustomField/${contactCustomFieldId}`,
       {
-        headers: {
-          Authorization: this.apiKey,
-        },
         method: "DELETE",
       }
     );
-    const data = await response.json();
-    return {
-      status: response.status,
-      response: {
-        ok: response.ok,
-        status: response.status,
-        statusText: response.statusText,
-        url: response.url,
-        data: data ? (data as DeleteAContactFieldResponse) : null,
-        body: response.body,
-        bodyUsed: response.bodyUsed,
-        headers: response.headers,
-        redirected: response.redirected,
-        type: response.type,
-        size: response.size,
-      },
-    };
   }
+
   /**
    * Retrieve all contact field settings
    * @link https://api.sevdesk.de/#tag/ContactField/operation/getContactFieldSettings
    * @returns Array of objects (contact fields model)
    */
-  async retrieveContactFieldSettings(): Promise<
-    IResponse<RetrieveContactFieldSettingsResponse>
+  async getContactFieldSettings(): Promise<
+    IResponse<getContactFieldSettingsResponse>
   > {
-    const response = await fetch(`${apiUrl}/ContactCustomFieldSetting`, {
-      headers: {
-        Authorization: this.apiKey,
-      },
+    return this.Responder.process(`/ContactCustomFieldSetting`, {
       method: "GET",
     });
-    const data = await response.json();
-    return {
-      status: response.status,
-      response: {
-        ok: response.ok,
-        status: response.status,
-        statusText: response.statusText,
-        url: response.url,
-        data: data ? (data as RetrieveContactFieldSettingsResponse) : null,
-        body: response.body,
-        bodyUsed: response.bodyUsed,
-        headers: response.headers,
-        redirected: response.redirected,
-        type: response.type,
-        size: response.size,
-      },
-    };
   }
+
   /**
    * Create contact field setting
    * @link https://api.sevdesk.de/#tag/ContactField/operation/createContactFieldSetting
@@ -258,70 +155,34 @@ export class ContactField {
    * @returns
    */
   async createContactFieldSetting(
-    body: CreateContactFieldSettingBody
-  ): Promise<IResponse<CreateContactFieldSettingResponse>> {
-    const response = await fetch(`${apiUrl}/ContactCustomFieldSetting`, {
+    body: createContactFieldSettingBody
+  ): Promise<IResponse<createContactFieldSettingResponse>> {
+    return this.Responder.process(`/ContactCustomFieldSetting`, {
       method: "POST",
       headers: {
-        Authorization: this.apiKey,
         "Content-Type": "application/json",
       },
       body: JSON.stringify(body),
     });
-    const data = await response.json();
-    return {
-      status: response.status,
-      response: {
-        ok: response.ok,
-        status: response.status,
-        statusText: response.statusText,
-        url: response.url,
-        data: data ? (data as CreateContactFieldSettingResponse) : null,
-        body: response.body,
-        bodyUsed: response.bodyUsed,
-        headers: response.headers,
-        redirected: response.redirected,
-        type: response.type,
-        size: response.size,
-      },
-    };
   }
+
   /**
    * Returns a single contact field setting
    * @link https://api.sevdesk.de/#tag/ContactField/operation/getContactFieldSettingById
    * @param contactCustomFieldSettingId ID of contact field to return
    * @returns Array of objects (contact fields model)
    */
-  async findContactFieldSettingByID(
+  async getContactFieldSettingById(
     contactCustomFieldSettingId: number
-  ): Promise<IResponse<FindContactFieldSettingByIDResponse>> {
-    const response = await fetch(
-      `${apiUrl}/ContactCustomFieldSetting/${contactCustomFieldSettingId}`,
+  ): Promise<IResponse<getContactFieldSettingByIdResponse>> {
+    return this.Responder.process(
+      `/ContactCustomFieldSetting/${contactCustomFieldSettingId}`,
       {
-        headers: {
-          Authorization: this.apiKey,
-        },
         method: "GET",
       }
     );
-    const data = await response.json();
-    return {
-      status: response.status,
-      response: {
-        ok: response.ok,
-        status: response.status,
-        statusText: response.statusText,
-        url: response.url,
-        data: data ? (data as FindContactFieldSettingByIDResponse) : null,
-        body: response.body,
-        bodyUsed: response.bodyUsed,
-        headers: response.headers,
-        redirected: response.redirected,
-        type: response.type,
-        size: response.size,
-      },
-    };
   }
+
   /**
    * Update an existing contact field setting
    * @link https://api.sevdesk.de/#tag/ContactField/operation/updateContactFieldSetting
@@ -331,106 +192,50 @@ export class ContactField {
    */
   async updateContactFieldSetting(
     contactCustomFieldSettingId: number,
-    body: UpdateContactFieldSettingBody
-  ): Promise<IResponse<UpdateContactFieldSettingResponse>> {
-    const response = await fetch(
-      `${apiUrl}/ContactCustomFieldSetting/${contactCustomFieldSettingId}`,
+    body: updateContactFieldSettingBody
+  ): Promise<IResponse<updateContactFieldSettingResponse>> {
+    return this.Responder.process(
+      `/ContactCustomFieldSetting/${contactCustomFieldSettingId}`,
       {
+        method: "PUT",
         headers: {
-          Authorization: this.apiKey,
           "Content-Type": "application/json",
         },
-        method: "PUT",
         body: JSON.stringify(body),
       }
     );
-    const data = await response.json();
-    return {
-      status: response.status,
-      response: {
-        ok: response.ok,
-        status: response.status,
-        statusText: response.statusText,
-        url: response.url,
-        data: data ? (data as UpdateContactFieldSettingResponse) : null,
-        body: response.body,
-        bodyUsed: response.bodyUsed,
-        headers: response.headers,
-        redirected: response.redirected,
-        type: response.type,
-        size: response.size,
-      },
-    };
   }
+
   /**
    * @link https://api.sevdesk.de/#tag/ContactField/operation/deleteContactFieldSetting
    * @param contactCustomFieldSettingId Id of contact field to delete
    * @returns Array of any
    */
-  async deletesAContactFieldSetting(
+  async deleteContactFieldSetting(
     contactCustomFieldSettingId: number
-  ): Promise<IResponse<DeletesAContactFieldSettingResponse>> {
-    const response = await fetch(
-      `${apiUrl}/ContactCustomFieldSetting/${contactCustomFieldSettingId}`,
+  ): Promise<IResponse<deleteContactFieldSettingResponse>> {
+    return this.Responder.process(
+      `/ContactCustomFieldSetting/${contactCustomFieldSettingId}`,
       {
-        headers: {
-          Authorization: this.apiKey,
-        },
         method: "DELETE",
       }
     );
-    const data = await response.json();
-    return {
-      status: response.status,
-      response: {
-        ok: response.ok,
-        status: response.status,
-        statusText: response.statusText,
-        url: response.url,
-        data: data ? (data as DeletesAContactFieldSettingResponse) : null,
-        body: response.body,
-        bodyUsed: response.bodyUsed,
-        headers: response.headers,
-        redirected: response.redirected,
-        type: response.type,
-        size: response.size,
-      },
-    };
   }
+
   /**
    * Receive count reference
    * @link https://api.sevdesk.de/#tag/ContactField/operation/getReferenceCount
    * @param contactCustomFieldSettingId ID of contact field you want to get the reference count
    * @returns
    */
-  async receiveCountReference(
+  async getReferenceCount(
     contactCustomFieldSettingId: number
-  ): Promise<IResponse<ReceiveCountReferenceResponse>> {
-    const response = await fetch(
-      `${apiUrl}/ContactCustomFieldSetting/${contactCustomFieldSettingId}/getReferenceCount`,
+  ): Promise<IResponse<getReferenceCountResponse>> {
+    return this.Responder.process(
+      `/ContactCustomFieldSetting/${contactCustomFieldSettingId}/getReferenceCount`,
       {
         method: "GET",
-        headers: {
-          Authorization: this.apiKey,
-        },
       }
     );
-    const data = await response.json();
-    return {
-      status: response.status,
-      response: {
-        ok: response.ok,
-        status: response.status,
-        statusText: response.statusText,
-        url: response.url,
-        data: data ? (data as ReceiveCountReferenceResponse) : null,
-        body: response.body,
-        bodyUsed: response.bodyUsed,
-        headers: response.headers,
-        redirected: response.redirected,
-        type: response.type,
-        size: response.size,
-      },
-    };
   }
 }
