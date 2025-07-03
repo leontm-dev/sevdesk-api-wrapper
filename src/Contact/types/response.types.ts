@@ -1,30 +1,30 @@
 // Project-Imports
 
-import { Contact } from "../../types/sevdeskModels.js";
+import { Contact } from "./base.types";
 
 // Code
 
-export type GetNextFreeCustomerNumberResponse = {
+export type getNextCustomerNumberResponse = {
   objects: string;
 };
-export type FindContactsByCustomFieldValueResponse = {
+export type findContactsByCustomFieldValueResponse = {
   objects: Contact[];
 };
-export type CheckIfACustomerNUmberIsAvailableResponse = {
+export type checkIfACustomerNumberIsAvailableResponse = {
   objects: boolean;
 };
-export type RetrieveContactsResponse = {
+export type getContactsResponse = {
   objects: Contact[];
 };
-export type CreateANewContactResponse = Contact;
-export type FindContactByIdResponse = {
+export type createContactResponse = Contact;
+export type getContactByIdResponse = {
   objects: Contact[];
 };
-export type UpdateAExistingContactResponse = Contact;
-export type DeletesAContactResponse = {
+export type updateContactResponse = Contact;
+export type deleteContactResponse = {
   objects: [null];
 };
-export type GetNumberOfAllItemsResponse = {
+export type getContactTabsItemCountByIdResponse = {
   orders: number;
   invoices: number;
   creditNotes: number;

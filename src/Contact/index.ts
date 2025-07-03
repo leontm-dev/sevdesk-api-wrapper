@@ -1,65 +1,45 @@
-// Imports
-
-import fetch from "node-fetch";
-
 // Project-Imports
 
-import { apiUrl } from "../index.js";
-import { IResponse } from "../types/Response.js";
+import { IResponse, Responder } from "../types/Response.js";
 import {
-  CheckIfACustomerNUmberIsAvailableResponse,
-  CreateANewContactResponse,
-  DeletesAContactResponse,
-  FindContactByIdResponse,
-  FindContactsByCustomFieldValueResponse,
-  GetNextFreeCustomerNumberResponse,
-  GetNumberOfAllItemsResponse,
-  UpdateAExistingContactResponse,
+  checkIfACustomerNumberIsAvailableResponse,
+  createContactResponse,
+  deleteContactResponse,
+  findContactsByCustomFieldValueResponse,
+  getContactByIdResponse,
+  getContactsResponse,
+  getContactTabsItemCountByIdResponse,
+  getNextCustomerNumberResponse,
+  updateContactResponse,
 } from "./types/response.types.js";
-import {
-  CreateANewContactBody,
-  UpdateAExistingContactBody,
-} from "./types/body.types.js";
+import { createContactBody, updateContactBody } from "./types/body.types.js";
 
 // Code
 
+/**
+ * @link https://api.sevdesk.de/#tag/Contact
+ */
 export class Contact {
-  constructor(private apiKey: string) {}
+  private Responder: Responder;
+  constructor(apiKey: string) {
+    this.Responder = new Responder(apiKey, "1");
+  }
   /**
    * Retrieves the next available customer number. Avoids duplicates.
    * @link https://api.sevdesk.de/#tag/Contact/operation/getNextCustomerNumber
    * @returns Next available customer number
    */
-  async getNextFreeCustomerNumber(): Promise<
-    IResponse<GetNextFreeCustomerNumberResponse>
+  async getNextCustomerNumber(): Promise<
+    IResponse<getNextCustomerNumberResponse>
   > {
-    const response = await fetch(
-      `${apiUrl}/Contact/Factory/getNextCustomerNumber`,
+    return this.Responder.process(
+      `/Contact/Factory/getNextFreeCustomerNumber`,
       {
-        headers: {
-          Authorization: `Bearer ${this.apiKey}`,
-        },
         method: "GET",
       }
     );
-    const data = await response.json();
-    return {
-      status: response.status,
-      response: {
-        body: response.body,
-        ok: response.ok,
-        status: response.status,
-        statusText: response.statusText,
-        url: response.url,
-        data: data ? (data as GetNextFreeCustomerNumberResponse) : null,
-        headers: response.headers,
-        redirected: response.redirected,
-        size: response.size,
-        type: response.type,
-        bodyUsed: response.bodyUsed,
-      },
-    };
   }
+
   /**
    * Returns an array of contacts having a certain custom field value set.
    * @link https://api.sevdesk.de/#tag/Contact/operation/findContactsByCustomFieldValue
@@ -72,48 +52,24 @@ export class Contact {
     value: string,
     customFieldName: string,
     customFieldSettingId?: string
-  ): Promise<IResponse<FindContactsByCustomFieldValueResponse>> {
-    const query = [];
-    if (customFieldSettingId) {
-      query.push(
-        `customFieldSetting[id]=${customFieldSettingId}&customFieldSetting[objectName]=ContactCustomFieldSetting`
-      );
-    }
-    if (value) {
-      query.push(`value=${value}`);
-    }
-    if (customFieldName) {
-      query.push(`customFieldName=${customFieldName}`);
-    }
-    const response = await fetch(
-      `${apiUrl}/Contact/Factory/findContactsByCustomFieldValue?${query.join(
-        "&"
-      )}`,
+  ): Promise<IResponse<findContactsByCustomFieldValueResponse>> {
+    return this.Responder.process(
+      `/Contact/Factory/findContactsByCustomFieldValue`,
       {
-        headers: {
-          Authorization: `Bearer ${this.apiKey}`,
-        },
         method: "GET",
-      }
-    );
-    const data = await response.json();
-    return {
-      status: response.status,
-      response: {
-        body: response.body,
-        ok: response.ok,
-        status: response.status,
-        statusText: response.statusText,
-        url: response.url,
-        data: data ? (data as FindContactsByCustomFieldValueResponse) : null,
-        headers: response.headers,
-        redirected: response.redirected,
-        size: response.size,
-        type: response.type,
-        bodyUsed: response.bodyUsed,
       },
-    };
+      [
+        { key: "value", value: value },
+        { key: "customFieldName", value: customFieldName },
+        { key: "customFieldSetting[id]", value: customFieldSettingId },
+        {
+          key: "customFieldSetting[objectName]",
+          value: "ContactCustomFieldSetting",
+        },
+      ]
+    );
   }
+
   /**
    * Checks if a given customer number is available or already used.
    * @link https://api.sevdesk.de/#tag/Contact/operation/contactCustomerNumberAvailabilityCheck
@@ -122,34 +78,16 @@ export class Contact {
    */
   async checkIfACustomerNumberIsAvailable(
     customerNumber: string
-  ): Promise<IResponse<CheckIfACustomerNUmberIsAvailableResponse>> {
-    const response = await fetch(
-      `${apiUrl}/Contact/Factory/checkIfACustomerNumberIsAvailable?customerNumber=${customerNumber}`,
+  ): Promise<IResponse<checkIfACustomerNumberIsAvailableResponse>> {
+    return this.Responder.process(
+      `/Contact/Factory/contactCustomerNumberAvailabilityCheck`,
       {
-        headers: {
-          Authorization: `Bearer ${this.apiKey}`,
-        },
         method: "GET",
-      }
-    );
-    const data = await response.json();
-    return {
-      status: response.status,
-      response: {
-        body: response.body,
-        ok: response.ok,
-        status: response.status,
-        statusText: response.statusText,
-        url: response.url,
-        data: data ? (data as CheckIfACustomerNUmberIsAvailableResponse) : null,
-        headers: response.headers,
-        redirected: response.redirected,
-        size: response.size,
-        type: response.type,
-        bodyUsed: response.bodyUsed,
       },
-    };
+      [{ key: "customerNumber", value: customerNumber }]
+    );
   }
+
   /**
    * There are a multitude of parameter which can be used to filter.
    * @link https://api.sevdesk.de/#tag/Contact/operation/getContacts
@@ -168,153 +106,54 @@ export class Contact {
    * @param orderByCustomerNumber Order all contacts after customer number in ASC/DESC order
    * @returns Array of objects (Contact model)
    */
-  async retrieveContacts(
+  async getContacts(
     depth?: "0" | "1",
-    customerNumber?: string,
-    categoryId?: string,
-    city?: string,
-    parentId?: string,
-    name?: string,
-    zip?: string,
-    countryId?: string,
-    createBefore?: Date,
-    createAfter?: Date,
-    updateBefore?: Date,
-    updateAfter?: Date,
-    orderByCustomerNumber?: "ASC" | "DESC"
-  ) {
-    const query = [];
-    if (customerNumber) {
-      query.push(`customerNumber=${customerNumber}`);
-    }
-    if (categoryId) {
-      query.push(
-        `category[Id]=${categoryId}&category[objectName]=ContactCategory`
-      );
-    }
-    if (city) {
-      query.push(`city=${city}`);
-    }
-    if (parentId) {
-      query.push(`parent[id]=${parentId}&parent[objectName]=Contact`);
-    }
-    if (depth) {
-      query.push(`depth=${depth}`);
-    }
-    if (name) {
-      query.push(`name=${name}`);
-    }
-    if (zip) {
-      query.push(`zip=${zip}`);
-    }
-    if (countryId) {
-      query.push(`country[id]=${countryId}&country[objectName]=Country`);
-    }
-    if (createBefore) {
-      query.push(`createBefore=${createBefore.toISOString()}`);
-    }
-    if (createAfter) {
-      query.push(`createAfter=${createAfter.toISOString()}`);
-    }
-    if (updateBefore) {
-      query.push(`updateBefore=${updateBefore.toISOString()}`);
-    }
-    if (updateAfter) {
-      query.push(`updateAfter=${updateAfter.toISOString()}`);
-    }
-    if (orderByCustomerNumber) {
-      query.push(`orderByCustomerNumber=${orderByCustomerNumber}`);
-    }
-    const response = await fetch(`${apiUrl}/Contact?${query.join("&")}`, {
-      headers: {
-        Authorization: `Bearer ${this.apiKey}`,
+    customerNumber?: string
+  ): Promise<IResponse<getContactsResponse>> {
+    return this.Responder.process(
+      `/Contact`,
+      {
+        method: "GET",
       },
-      method: "GET",
-    });
-    const data = await response.json();
-    return {
-      status: response.status,
-      response: {
-        body: response.body,
-        ok: response.ok,
-        status: response.status,
-        statusText: response.statusText,
-        url: response.url,
-        data: data,
-        headers: response.headers,
-        redirected: response.redirected,
-        size: response.size,
-        type: response.type,
-        bodyUsed: response.bodyUsed,
-      },
-    };
+      [
+        { key: "depth", value: depth },
+        { key: "customerNumber", value: customerNumber },
+      ]
+    );
   }
+
   /**
    * Creates a new contact.
    * @link https://api.sevdesk.de/#tag/Contact/operation/createContact
    * @param body Creation data
    * @returns Returns created contact
    */
-  async createANewContact(
-    body: CreateANewContactBody
-  ): Promise<IResponse<CreateANewContactResponse>> {
-    const response = await fetch(`${apiUrl}/Contact`, {
+  async createContact(
+    body: createContactBody
+  ): Promise<IResponse<createContactResponse>> {
+    return this.Responder.process(`/Contact`, {
       method: "POST",
       headers: {
-        Authorization: `${this.apiKey}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify(body),
     });
-    const data = await response.json();
-    return {
-      status: response.status,
-      response: {
-        body: response.body,
-        ok: response.ok,
-        status: response.status,
-        statusText: response.statusText,
-        url: response.url,
-        data: data ? (data as CreateANewContactResponse) : null,
-        headers: response.headers,
-        redirected: response.redirected,
-        size: response.size,
-        type: response.type,
-        bodyUsed: response.bodyUsed,
-      },
-    };
   }
+
   /**
    * Returns a single contact
    * @link https://api.sevdesk.de/#tag/Contact/operation/getContactById
    * @param contactId ID of contact to return
    * @returns Returns a single contact
    */
-  async findContactByID(
+  async getContactById(
     contactId: number
-  ): Promise<IResponse<FindContactByIdResponse>> {
-    const response = await fetch(`${apiUrl}/Contact/${contactId}`, {
+  ): Promise<IResponse<getContactByIdResponse>> {
+    return this.Responder.process(`/Contact/${contactId}`, {
       method: "GET",
-      headers: { Authorization: this.apiKey },
     });
-    const data = await response.json();
-    return {
-      status: response.status,
-      response: {
-        body: response.body,
-        ok: response.ok,
-        status: response.status,
-        statusText: response.statusText,
-        url: response.url,
-        data: data ? (data as FindContactByIdResponse) : null,
-        headers: response.headers,
-        redirected: response.redirected,
-        size: response.size,
-        type: response.type,
-        bodyUsed: response.bodyUsed,
-      },
-    };
   }
+
   /**
    * Update a contact
    * @link https://api.sevdesk.de/#tag/Contact/operation/updateContact
@@ -322,103 +161,44 @@ export class Contact {
    * @param body Update data
    * @returns Returns changed contact resource
    */
-  async updateAExistingContact(
+  async updateContact(
     contactId: number,
-    body: UpdateAExistingContactBody
-  ): Promise<IResponse<UpdateAExistingContactResponse>> {
-    const response = await fetch(`${apiUrl}/Contact/${contactId}`, {
+    body: updateContactBody
+  ): Promise<IResponse<updateContactResponse>> {
+    return this.Responder.process(`/Contact/${contactId}`, {
       method: "PUT",
       headers: {
-        Authorization: this.apiKey,
         "Content-Type": "application/json",
       },
       body: JSON.stringify(body),
     });
-    const data = await response.json();
-    return {
-      status: response.status,
-      response: {
-        body: response.body,
-        ok: response.ok,
-        status: response.status,
-        statusText: response.statusText,
-        url: response.url,
-        data: data ? (data as UpdateAExistingContactResponse) : null,
-        headers: response.headers,
-        redirected: response.redirected,
-        size: response.size,
-        type: response.type,
-        bodyUsed: response.bodyUsed,
-      },
-    };
   }
+
   /**
    *
    * @link https://api.sevdesk.de/#tag/Contact/operation/deleteContact
    * @param contactId Id of contact resource to delete
    * @returns contact deleted
    */
-  async deletesAContact(
+  async deleteContact(
     contactId: number
-  ): Promise<IResponse<DeletesAContactResponse>> {
-    const response = await fetch(`${apiUrl}/Contact/${contactId}`, {
+  ): Promise<IResponse<deleteContactResponse>> {
+    return this.Responder.process(`/Contact/${contactId}`, {
       method: "DELETE",
-      headers: {
-        Authorization: this.apiKey,
-      },
     });
-    const data = await response.json();
-    return {
-      status: response.status,
-      response: {
-        body: response.body,
-        ok: response.ok,
-        status: response.status,
-        statusText: response.statusText,
-        url: response.url,
-        data: data ? (data as DeletesAContactResponse) : null,
-        headers: response.headers,
-        redirected: response.redirected,
-        size: response.size,
-        type: response.type,
-        bodyUsed: response.bodyUsed,
-      },
-    };
   }
+
   /**
    * Get number of all invoices, orders, etc. of a specified contact
    * @link https://api.sevdesk.de/#tag/Contact/operation/getContactTabsItemCountById
    * @param contactId ID of contact to return
    * @returns
    */
-  async getNumberOfAllItems(
+  async getContactTabsItemCountById(
     contactId: number
-  ): Promise<IResponse<GetNumberOfAllItemsResponse>> {
-    const response = await fetch(
-      `${apiUrl}/Contact/${contactId}/getTabsItemCount`,
-      {
-        method: "GET",
-        headers: {
-          Authorization: this.apiKey,
-        },
-      }
-    );
-    const data = await response.json();
-    return {
-      status: response.status,
-      response: {
-        body: response.body,
-        ok: response.ok,
-        status: response.status,
-        statusText: response.statusText,
-        url: response.url,
-        data: data ? (data as GetNumberOfAllItemsResponse) : null,
-        headers: response.headers,
-        redirected: response.redirected,
-        size: response.size,
-        type: response.type,
-        bodyUsed: response.bodyUsed,
-      },
-    };
+  ): Promise<IResponse<getContactTabsItemCountByIdResponse>> {
+    return this.Responder.process(`/Contact/${contactId}/getTabsItemCount`, {
+      method: "GET",
+    });
   }
 }
