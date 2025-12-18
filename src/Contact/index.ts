@@ -118,7 +118,7 @@ export class Contact {
    * @param body Creation data
    * @returns Returns created contact
    */
-  async create(body: createContactBody) {
+  async createOne(body: createContactBody) {
     return new API(this.apiKey).request<createContactResponse>(
       "/Contact",
       undefined,
@@ -151,7 +151,7 @@ export class Contact {
    * @param body Update data
    * @returns Returns changed contact resource
    */
-  async update(contactId: number, body: updateContactBody) {
+  async updateOne(contactId: number, body: updateContactBody) {
     return new API(this.apiKey).request<updateContactResponse>(
       `/Contact/${contactId}`,
       undefined,
@@ -169,7 +169,7 @@ export class Contact {
    * @param contactId Id of contact resource to delete
    * @returns contact deleted
    */
-  async delete(contactId: number) {
+  async deleteOne(contactId: number) {
     return new API(this.apiKey).request<deleteContactResponse>(
       `/Contact/${contactId}`,
       undefined,
@@ -183,7 +183,7 @@ export class Contact {
    * @param contactId ID of contact to return
    * @returns
    */
-  async getTabsItemCount(contactId: number) {
+  async getOnesTabsItemCount(contactId: number) {
     return new API(this.apiKey).request<getContactTabsItemCountByIdResponse>(
       `/Contact/${contactId}/getTabsItemCount`,
       undefined,
