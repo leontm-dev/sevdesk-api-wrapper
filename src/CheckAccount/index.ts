@@ -1,6 +1,8 @@
 // Project-Imports
 
-import { IResponse, Responder } from "../types/Response.js";
+import { API } from "../types/common.classes.js";
+import { RequestOptions } from "../types/common.types.js";
+import { ApiResponse } from "../types/Response.js";
 import {
   createClearingAccountBody,
   createFileImportAccountBody,
@@ -35,19 +37,18 @@ Therefore, you only need to send normal GET requests to the CheckAccount endpoin
   * @link https://api.sevdesk.de/#tag/CheckAccount
  */
 export class CheckAccount {
-  private Responder: Responder;
-  constructor(apiKey: string) {
-    this.Responder = new Responder(apiKey, "1");
-  }
+  constructor(private apiKey: string) {}
   /**
    * Retrieve all check accounts
    * @link https://api.sevdesk.de/#tag/CheckAccount/operation/getCheckAccounts
    * @returns Array of objects (CheckAccount model)
    */
-  async getCheckAccounts(): Promise<IResponse<getCheckAccountsResponse>> {
-    return this.Responder.process("/CheckAccount", {
-      method: "GET",
-    });
+  async getMany() {
+    return await new API(this.apiKey).request<getCheckAccountsResponse>(
+      "/CheckAccount",
+      undefined,
+      { method: "GET" }
+    );
   }
 
   /**
@@ -56,16 +57,16 @@ export class CheckAccount {
    * @param body Data to create a file import account
    * @returns CheckAccount model. Showing the properties relevant to file import accounts.
    */
-  async createFileImportAccount(
-    body: createFileImportAccountBody
-  ): Promise<IResponse<createFileImportAccountResponse>> {
-    return this.Responder.process("/CheckAccount/Factory/fileImportAccount", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(body),
-    });
+  async createFileImportAccount(body: createFileImportAccountBody) {
+    return await new API(this.apiKey).request<createFileImportAccountResponse>(
+      "/CheckAccount/Factory/fileImportAccount",
+      undefined,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      }
+    );
   }
 
   /**
@@ -74,16 +75,16 @@ export class CheckAccount {
    * @param body Data to create a clearing account
    * @returns CheckAccount model. Showing the properties relevant to clearing accounts.
    */
-  async createNewClearingAccount(
-    body: createClearingAccountBody
-  ): Promise<IResponse<createClearingAccountResponse>> {
-    return this.Responder.process("/CheckAccount/Factory/clearingAccount", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(body),
-    });
+  async createNewClearingAccount(body: createClearingAccountBody) {
+    return await new API(this.apiKey).request<createClearingAccountResponse>(
+      "/CheckAccount/Factory/clearingAccount",
+      undefined,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      }
+    );
   }
 
   /**
@@ -92,12 +93,12 @@ export class CheckAccount {
    * @param checkAccountId ID of check account
    * @returns Array of objects (CheckAccount model)
    */
-  async getCheckAccountById(
-    checkAccountId: number
-  ): Promise<IResponse<getCheckAccountByIdResponse>> {
-    return this.Responder.process(`/CheckAccount/${checkAccountId}`, {
-      method: "GET",
-    });
+  async getOne(checkAccountId: number) {
+    return await new API(this.apiKey).request<getCheckAccountByIdResponse>(
+      `/CheckAccount/${checkAccountId}`,
+      undefined,
+      { method: "GET" }
+    );
   }
 
   /**
@@ -107,17 +108,16 @@ export class CheckAccount {
    * @param body Update data
    * @returns Returns changed check account resource
    */
-  async updateCheckAccount(
-    checkAccountId: number,
-    body: updateCheckAccountBody
-  ): Promise<IResponse<updateCheckAccountResponse>> {
-    return this.Responder.process(`/CheckAccount/${checkAccountId}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(body),
-    });
+  async updateOne(checkAccountId: number, body: updateCheckAccountBody) {
+    return await new API(this.apiKey).request<updateCheckAccountResponse>(
+      `/CheckAccount/${checkAccountId}`,
+      undefined,
+      {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      }
+    );
   }
 
   /**
@@ -125,12 +125,12 @@ export class CheckAccount {
    * @param checkAccountId Id of check account to delete
    * @returns Array of any
    */
-  async deleteCheckAccount(
-    checkAccountId: number
-  ): Promise<IResponse<deleteCheckAccountResponse>> {
-    return this.Responder.process(`/CheckAccount/${checkAccountId}`, {
-      method: "DELETE",
-    });
+  async deleteOne(checkAccountId: number) {
+    return await new API(this.apiKey).request<deleteCheckAccountResponse>(
+      `/CheckAccount/${checkAccountId}`,
+      undefined,
+      { method: "DELETE" }
+    );
   }
 
   /**
@@ -139,21 +139,11 @@ export class CheckAccount {
    * @param checkAccountId ID of check account
    * @param date Only consider transactions up to this date at 23:59:59
    */
-  async getBalanceAtDate(
-    checkAccountId: number,
-    date: Date
-  ): Promise<IResponse<getBalanceAtDateResponse>> {
-    return this.Responder.process(
-      `/CheckAccount/${checkAccountId}/balanceAtDate`,
-      {
-        method: "GET",
-      },
-      [
-        {
-          key: "date",
-          value: date.toISOString().split("T")[0], // Format date to YYYY-MM-DD
-        },
-      ]
+  async getOnesBalanceAtDate(checkAccountId: number, date: Date) {
+    return await new API(this.apiKey).request<getBalanceAtDateResponse>(
+      `/CheckAccount/${checkAccountId}/getBalanceAtDate`,
+      { date: date.toISOString() },
+      { method: "GET" }
     );
   }
 }

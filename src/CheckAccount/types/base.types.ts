@@ -1,6 +1,6 @@
 // Project-Imports
 
-import { sevClient } from "../../types/sevdeskModels";
+import { SevClient } from "../../types/models.types";
 
 // Code
 
@@ -25,7 +25,7 @@ export type CheckAccount = {
   /**
    * Client to which check account belongs. Will be filled automatically
    */
-  sevClient: sevClient;
+  sevClient: SevClient;
   /**
    * Name of the check account
    */
