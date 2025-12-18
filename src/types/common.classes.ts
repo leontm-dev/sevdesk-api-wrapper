@@ -1,6 +1,7 @@
 // Project-Imports
 
 import { apiUrl } from "..";
+import { TypeSafeRequestInit } from "./common.types";
 import { APIError } from "./Errors";
 import { IApiResponse } from "./Response";
 
@@ -12,7 +13,7 @@ export class API {
   async request<T>(
     url: string,
     query: Record<string, string> = {},
-    options: RequestInit
+    options: TypeSafeRequestInit
   ): Promise<IApiResponse<T>> {
     const queryArr = Object.entries(query);
     const res = await fetch(
