@@ -1,6 +1,6 @@
 // Project-Imports
 
-import { sevClient, Tag } from "../../types/sevdeskModels";
+import type { Tag } from "./base.types";
 
 // Code
 
@@ -14,35 +14,7 @@ export type UpdateTagResponse = Tag;
 export type DeletesATagResponse = {
   objects: [null];
 };
-export type CreateANewTagResponse = {
-  id: string;
-  objectName: "TagRelation";
-  additionalInformation: string | null;
-  create: Date;
-  tag: {
-    id: string;
-    objectName: "Tag";
-  };
-  object: {
-    id: number;
-    objectName: "Invoice" | "Voucher" | "Order" | "CreditNote";
-  };
-  sevClient: sevClient;
-};
+export type CreateANewTagResponse = Tag;
 export type RetrieveTagRelationsResponse = {
-  objects: {
-    id: string;
-    objectName: "TagRelation";
-    additionalInformation: string | null;
-    create: Date;
-    tag: {
-      id: string;
-      objectName: "Tag";
-    };
-    object: {
-      id: number;
-      objectName: "Invoice" | "Voucher" | "Order" | "CreditNote";
-    };
-    sevClient: sevClient;
-  }[];
+  objects: Tag[];
 };

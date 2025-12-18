@@ -1,6 +1,6 @@
 // Project-Imports
 
-import { Responder, IResponse } from "../types/Response";
+import { API } from "../types/common.classes";
 import { CreateANewTagBody, UpdateTagBody } from "./types/body.types";
 import {
   CreateANewTagResponse,
@@ -14,10 +14,7 @@ import {
 // Code
 
 export class Tag {
-  private Responder: Responder;
-  constructor(private apiKey: string) {
-    this.Responder = new Responder(apiKey, "1");
-  }
+  constructor(private apiKey: string) {}
 
   /**
    * Retrieve all tags
@@ -26,19 +23,15 @@ export class Tag {
    * @param name Name of the Tag
    * @returns Array of objects (Tag model)
    */
-  async retrieveTags(
-    id: number,
-    name: string
-  ): Promise<IResponse<RetrieveTagsResponse>> {
-    return this.Responder.process(
+  async getMany(id?: number, name?: string) {
+    const queryObj: Record<string, string> = {};
+    if (id) queryObj["id"] = id.toString();
+    if (name) queryObj["name"] = name;
+
+    return await new API(this.apiKey).request<RetrieveTagsResponse>(
       "/Tag",
-      {
-        method: "GET",
-      },
-      [
-        { key: "id", value: id },
-        { key: "name", value: name },
-      ]
+      queryObj,
+      { method: "GET" }
     );
   }
 
@@ -48,8 +41,12 @@ export class Tag {
    * @param tagId ID of tag to return
    * @returns Array of objects (Tag model)
    */
-  async findTagByID(tagId: number): Promise<IResponse<FindTagByIDREsponse>> {
-    return this.Responder.process(`/Tag/${tagId}`, { method: "GET" });
+  async getOne(tagId: number) {
+    return await new API(this.apiKey).request<FindTagByIDREsponse>(
+      `/Tag/${tagId}`,
+      undefined,
+      { method: "GET" }
+    );
   }
 
   /**
@@ -59,17 +56,16 @@ export class Tag {
    * @param body
    * @returns
    */
-  async updateTag(
-    tagId: number,
-    body: UpdateTagBody
-  ): Promise<IResponse<UpdateTagResponse>> {
-    return this.Responder.process("/Tag/" + tagId, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(body),
-    });
+  async updateOne(tagId: number, body: UpdateTagBody) {
+    return await new API(this.apiKey).request<UpdateTagResponse>(
+      `/Tag/${tagId}`,
+      undefined,
+      {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      }
+    );
   }
 
   /**
@@ -78,10 +74,12 @@ export class Tag {
    * @param tagId Id of tag to delete
    * @returns Array of any
    */
-  async deletesATag(tagId: number): Promise<IResponse<DeletesATagResponse>> {
-    return this.Responder.process(`/Tag/${tagId}`, {
-      method: "DELETE",
-    });
+  async deleteOne(tagId: number) {
+    return await new API(this.apiKey).request<DeletesATagResponse>(
+      `/Tag/${tagId}`,
+      undefined,
+      { method: "DELETE" }
+    );
   }
 
   /**
@@ -90,23 +88,28 @@ export class Tag {
    * @param body
    * @returns
    */
-  async createANewTag(
-    body: CreateANewTagBody
-  ): Promise<IResponse<CreateANewTagResponse>> {
-    return this.Responder.process("/Tag/Factory/create", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(body),
-    });
+  async createOne(body: CreateANewTagBody) {
+    return await new API(this.apiKey).request<CreateANewTagResponse>(
+      "/Tag/Factory/create",
+      undefined,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      }
+    );
   }
 
-  async retrieveTagRelations(): Promise<
-    IResponse<RetrieveTagRelationsResponse>
-  > {
-    return this.Responder.process("/TagRelation", {
-      method: "GET",
-    });
+  /**
+   * Retrieve all tag relations
+   * @link https://api.sevdesk.de/#tag/Tag/operation/getTagRelations
+   * @returns Array of objects (Tag model)
+   */
+  async getManyRelations() {
+    return await new API(this.apiKey).request<RetrieveTagRelationsResponse>(
+      "/TagRelation",
+      undefined,
+      { method: "GET" }
+    );
   }
 }
