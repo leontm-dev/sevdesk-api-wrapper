@@ -1,6 +1,5 @@
 // Project-Imports
 
-import { IResponse, Responder } from "../types/Response.js";
 import {
   checkIfACustomerNumberIsAvailableResponse,
   createContactResponse,
@@ -13,6 +12,7 @@ import {
   updateContactResponse,
 } from "./types/response.types.js";
 import { createContactBody, updateContactBody } from "./types/body.types.js";
+import { API } from "../types/common.classes.js";
 
 // Code
 
@@ -20,23 +20,17 @@ import { createContactBody, updateContactBody } from "./types/body.types.js";
  * @link https://api.sevdesk.de/#tag/Contact
  */
 export class Contact {
-  private Responder: Responder;
-  constructor(apiKey: string) {
-    this.Responder = new Responder(apiKey, "1");
-  }
+  constructor(private apiKey: string) {}
   /**
    * Retrieves the next available customer number. Avoids duplicates.
    * @link https://api.sevdesk.de/#tag/Contact/operation/getNextCustomerNumber
    * @returns Next available customer number
    */
-  async getNextCustomerNumber(): Promise<
-    IResponse<getNextCustomerNumberResponse>
-  > {
-    return this.Responder.process(
-      `/Contact/Factory/getNextFreeCustomerNumber`,
-      {
-        method: "GET",
-      }
+  async getNextCustomerNumber() {
+    return await new API(this.apiKey).request<{ objects: string }>(
+      "/Contact/Factory/getNextCustomerNumber",
+      {},
+      { method: "GET" }
     );
   }
 
@@ -52,21 +46,23 @@ export class Contact {
     value: string,
     customFieldName: string,
     customFieldSettingId?: string
-  ): Promise<IResponse<findContactsByCustomFieldValueResponse>> {
-    return this.Responder.process(
-      `/Contact/Factory/findContactsByCustomFieldValue`,
+  ) {
+    const queryObj: Record<string, string> = {
+      value,
+      customFieldName,
+    };
+    if (customFieldSettingId) {
+      queryObj["customFieldSetting[id]"] = customFieldSettingId;
+      queryObj["customFieldSetting[objectName]"] = "ContactCustomFielSetting";
+    }
+    return await new API(
+      this.apiKey
+    ).request<findContactsByCustomFieldValueResponse>(
+      "/Contact/Factory/findContactsByCustomFieldValue",
+      queryObj,
       {
         method: "GET",
-      },
-      [
-        { key: "value", value: value },
-        { key: "customFieldName", value: customFieldName },
-        { key: "customFieldSetting[id]", value: customFieldSettingId },
-        {
-          key: "customFieldSetting[objectName]",
-          value: "ContactCustomFieldSetting",
-        },
-      ]
+      }
     );
   }
 
@@ -76,15 +72,13 @@ export class Contact {
    * @param customerNumber The customer number to be checked.
    * @returns Returns whether given customer number is available.
    */
-  async checkIfACustomerNumberIsAvailable(
-    customerNumber: string
-  ): Promise<IResponse<checkIfACustomerNumberIsAvailableResponse>> {
-    return this.Responder.process(
-      `/Contact/Factory/contactCustomerNumberAvailabilityCheck`,
-      {
-        method: "GET",
-      },
-      [{ key: "customerNumber", value: customerNumber }]
+  async checkCustomerNumberAvailability(customerNumber: string) {
+    return new API(
+      this.apiKey
+    ).request<checkIfACustomerNumberIsAvailableResponse>(
+      `/Contact/Mapper/checkCustomerNumberAvailability`,
+      { customerNumber: customerNumber },
+      { method: "GET" }
     );
   }
 
@@ -106,19 +100,15 @@ export class Contact {
    * @param orderByCustomerNumber Order all contacts after customer number in ASC/DESC order
    * @returns Array of objects (Contact model)
    */
-  async getContacts(
-    depth?: "0" | "1",
-    customerNumber?: string
-  ): Promise<IResponse<getContactsResponse>> {
-    return this.Responder.process(
-      `/Contact`,
-      {
-        method: "GET",
-      },
-      [
-        { key: "depth", value: depth },
-        { key: "customerNumber", value: customerNumber },
-      ]
+  async getMany(depth?: "0" | "1", customerNumber?: string) {
+    const queryObj: Record<string, string> = {};
+    if (depth) queryObj["depth"] = depth;
+    if (customerNumber) queryObj["customerNumber"] = customerNumber;
+
+    return new API(this.apiKey).request<getContactsResponse>(
+      "/Contact",
+      queryObj,
+      { method: "GET" }
     );
   }
 
@@ -128,16 +118,16 @@ export class Contact {
    * @param body Creation data
    * @returns Returns created contact
    */
-  async createContact(
-    body: createContactBody
-  ): Promise<IResponse<createContactResponse>> {
-    return this.Responder.process(`/Contact`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(body),
-    });
+  async create(body: createContactBody) {
+    return new API(this.apiKey).request<createContactResponse>(
+      "/Contact",
+      undefined,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      }
+    );
   }
 
   /**
@@ -146,12 +136,12 @@ export class Contact {
    * @param contactId ID of contact to return
    * @returns Returns a single contact
    */
-  async getContactById(
-    contactId: number
-  ): Promise<IResponse<getContactByIdResponse>> {
-    return this.Responder.process(`/Contact/${contactId}`, {
-      method: "GET",
-    });
+  async getOne(contactId: number) {
+    return new API(this.apiKey).request<getContactByIdResponse>(
+      `/Contact/${contactId}`,
+      undefined,
+      { method: "GET" }
+    );
   }
 
   /**
@@ -161,17 +151,16 @@ export class Contact {
    * @param body Update data
    * @returns Returns changed contact resource
    */
-  async updateContact(
-    contactId: number,
-    body: updateContactBody
-  ): Promise<IResponse<updateContactResponse>> {
-    return this.Responder.process(`/Contact/${contactId}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(body),
-    });
+  async update(contactId: number, body: updateContactBody) {
+    return new API(this.apiKey).request<updateContactResponse>(
+      `/Contact/${contactId}`,
+      undefined,
+      {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      }
+    );
   }
 
   /**
@@ -180,12 +169,12 @@ export class Contact {
    * @param contactId Id of contact resource to delete
    * @returns contact deleted
    */
-  async deleteContact(
-    contactId: number
-  ): Promise<IResponse<deleteContactResponse>> {
-    return this.Responder.process(`/Contact/${contactId}`, {
-      method: "DELETE",
-    });
+  async delete(contactId: number) {
+    return new API(this.apiKey).request<deleteContactResponse>(
+      `/Contact/${contactId}`,
+      undefined,
+      { method: "DELETE" }
+    );
   }
 
   /**
@@ -194,11 +183,11 @@ export class Contact {
    * @param contactId ID of contact to return
    * @returns
    */
-  async getContactTabsItemCountById(
-    contactId: number
-  ): Promise<IResponse<getContactTabsItemCountByIdResponse>> {
-    return this.Responder.process(`/Contact/${contactId}/getTabsItemCount`, {
-      method: "GET",
-    });
+  async getTabsItemCount(contactId: number) {
+    return new API(this.apiKey).request<getContactTabsItemCountByIdResponse>(
+      `/Contact/${contactId}/getTabsItemCount`,
+      undefined,
+      { method: "GET" }
+    );
   }
 }

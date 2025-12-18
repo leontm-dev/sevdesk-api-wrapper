@@ -1,6 +1,6 @@
 // Project-Imports
 
-import { sevClient } from "../../types/sevdeskModels";
+import type { SevClient } from "../../types/models.classes";
 
 // Code
 
@@ -94,7 +94,7 @@ Not to be used for organizations.
   /**
    * Client to which contact belongs. Will be filled automatically
    */
-  sevClient: sevClient;
+  sevClient: SevClient;
   /**
    * Second name of the contact.
 Not to be used for organizations.
