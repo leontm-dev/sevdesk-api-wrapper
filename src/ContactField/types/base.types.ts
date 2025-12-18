@@ -1,6 +1,6 @@
 // Project-Imports
 
-import { sevClient } from "../../types/sevdeskModels";
+import { SevClient } from "../../types/models.types";
 
 // Code
 
@@ -24,7 +24,7 @@ export type ContactField = {
   /**
    * Client to which contact field belongs. Will be filled automatically
    */
-  sevClient: sevClient;
+  sevClient: SevClient;
   /**
    * name of the contact
    */
@@ -67,7 +67,7 @@ export type ContactCustomFieldSetting = {
   /**
    * Client to which invoice belongs. Will be filled automatically
    */
-  sevClient: sevClient;
+  sevClient: SevClient;
   /**
    * name of the contact fields
    */

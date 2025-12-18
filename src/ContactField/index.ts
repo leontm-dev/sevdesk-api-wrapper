@@ -1,6 +1,5 @@
 // Project-Imports
 
-import { IResponse, Responder } from "../types/Response.js";
 import {
   createContactFieldResponse,
   createContactFieldSettingResponse,
@@ -20,6 +19,7 @@ import {
   updateContactFieldBody,
   updateContactFieldSettingBody,
 } from "./types/body.types.js";
+import { API } from "../types/common.classes.js";
 
 // Code
 
@@ -28,10 +28,7 @@ import {
  * @link https://api.sevdesk.de/#tag/ContactField
  */
 export class ContactField {
-  private Responder: Responder;
-  constructor(apiKey: string) {
-    this.Responder = new Responder(apiKey, "1");
-  }
+  constructor(private apiKey: string) {}
   /**
    * Retrieve all Placeholders
    * @link https://api.sevdesk.de/#tag/ContactField/operation/getPlaceholder
@@ -39,7 +36,7 @@ export class ContactField {
    * @param subObjectName Sub model name, required if you have "Email" at objectName
    * @returns Array of objects (Textparser fetchDictionaryEntriesByType model)
    */
-  async getPlaceholder(
+  async getManyPlaceholders(
     objectName:
       | "Invoice"
       | "CreditNote"
@@ -48,22 +45,16 @@ export class ContactField {
       | "Letter"
       | "Email",
     subObjectName?: "Invoice" | "CreditNote" | "Order" | "Contact" | "Letter"
-  ): Promise<IResponse<getPlaceholderResponse>> {
-    return this.Responder.process(
-      `/Textparser/fetchDictionaryEntriesByType`,
-      {
-        method: "GET",
-      },
-      [
-        {
-          key: "objectName",
-          value: objectName,
-        },
-        {
-          key: "subObjectName",
-          value: subObjectName,
-        },
-      ]
+  ) {
+    const queryObj: Record<string, string> = {
+      objectName,
+    };
+    if (subObjectName) queryObj["subObjectName"] = subObjectName;
+
+    return await new API(this.apiKey).request<getPlaceholderResponse>(
+      "/Textparser/fetchDictionaryEntriesByType",
+      queryObj,
+      { method: "GET" }
     );
   }
 
@@ -72,10 +63,12 @@ export class ContactField {
    * @link https://api.sevdesk.de/#tag/ContactField/operation/getContactFields
    * @returns Array of objects (contact fields model)
    */
-  async getContactFields(): Promise<IResponse<getContactFieldsResponse>> {
-    return this.Responder.process(`/ContactCustomField`, {
-      method: "GET",
-    });
+  async getMany() {
+    return await new API(this.apiKey).request<getContactFieldsResponse>(
+      "/ContactCustomField",
+      undefined,
+      { method: "GET" }
+    );
   }
 
   /**
@@ -84,16 +77,16 @@ export class ContactField {
    * @param body
    * @returns
    */
-  async createContactField(
-    body: createContactFieldBody
-  ): Promise<IResponse<createContactFieldResponse>> {
-    return this.Responder.process(`/ContactCustomField`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(body),
-    });
+  async createOne(body: createContactFieldBody) {
+    return await new API(this.apiKey).request<createContactFieldResponse>(
+      "/ContactCustomField",
+      undefined,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      }
+    );
   }
 
   /**
@@ -103,17 +96,13 @@ export class ContactField {
    * @param body Update data
    * @returns
    */
-  async updateContactField(
-    contactCustomFieldId: number,
-    body: updateContactFieldBody
-  ): Promise<IResponse<updateContactFieldResponse>> {
-    return this.Responder.process(
+  async updateOne(contactCustomFieldId: number, body: updateContactFieldBody) {
+    return await new API(this.apiKey).request<updateContactFieldResponse>(
       `/ContactCustomField/${contactCustomFieldId}`,
+      undefined,
       {
         method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),
       }
     );
@@ -124,14 +113,11 @@ export class ContactField {
    * @param contactCustomFieldId Id of contact field
    * @returns
    */
-  async deleteContactField(
-    contactCustomFieldId: number
-  ): Promise<IResponse<deleteContactFieldResponse>> {
-    return this.Responder.process(
+  async deleteOne(contactCustomFieldId: number) {
+    return await new API(this.apiKey).request<deleteContactFieldResponse>(
       `/ContactCustomField/${contactCustomFieldId}`,
-      {
-        method: "DELETE",
-      }
+      undefined,
+      { method: "DELETE" }
     );
   }
 
@@ -140,12 +126,12 @@ export class ContactField {
    * @link https://api.sevdesk.de/#tag/ContactField/operation/getContactFieldSettings
    * @returns Array of objects (contact fields model)
    */
-  async getContactFieldSettings(): Promise<
-    IResponse<getContactFieldSettingsResponse>
-  > {
-    return this.Responder.process(`/ContactCustomFieldSetting`, {
-      method: "GET",
-    });
+  async getManySettings() {
+    return await new API(this.apiKey).request<getContactFieldSettingsResponse>(
+      "/ContactCustomFieldSetting",
+      undefined,
+      { method: "GET" }
+    );
   }
 
   /**
@@ -154,16 +140,18 @@ export class ContactField {
    * @param body
    * @returns
    */
-  async createContactFieldSetting(
-    body: createContactFieldSettingBody
-  ): Promise<IResponse<createContactFieldSettingResponse>> {
-    return this.Responder.process(`/ContactCustomFieldSetting`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(body),
-    });
+  async createOneSetting(body: createContactFieldSettingBody) {
+    return await new API(
+      this.apiKey
+    ).request<createContactFieldSettingResponse>(
+      "/ContactCustomFieldSetting",
+      undefined,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      }
+    );
   }
 
   /**
@@ -172,14 +160,13 @@ export class ContactField {
    * @param contactCustomFieldSettingId ID of contact field to return
    * @returns Array of objects (contact fields model)
    */
-  async getContactFieldSettingById(
-    contactCustomFieldSettingId: number
-  ): Promise<IResponse<getContactFieldSettingByIdResponse>> {
-    return this.Responder.process(
+  async getOneSetting(contactCustomFieldSettingId: number) {
+    return await new API(
+      this.apiKey
+    ).request<getContactFieldSettingByIdResponse>(
       `/ContactCustomFieldSetting/${contactCustomFieldSettingId}`,
-      {
-        method: "GET",
-      }
+      undefined,
+      { method: "GET" }
     );
   }
 
@@ -190,17 +177,18 @@ export class ContactField {
    * @param body
    * @returns
    */
-  async updateContactFieldSetting(
+  async updateOneSetting(
     contactCustomFieldSettingId: number,
     body: updateContactFieldSettingBody
-  ): Promise<IResponse<updateContactFieldSettingResponse>> {
-    return this.Responder.process(
+  ) {
+    return await new API(
+      this.apiKey
+    ).request<updateContactFieldSettingResponse>(
       `/ContactCustomFieldSetting/${contactCustomFieldSettingId}`,
+      undefined,
       {
         method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),
       }
     );
@@ -211,14 +199,13 @@ export class ContactField {
    * @param contactCustomFieldSettingId Id of contact field to delete
    * @returns Array of any
    */
-  async deleteContactFieldSetting(
-    contactCustomFieldSettingId: number
-  ): Promise<IResponse<deleteContactFieldSettingResponse>> {
-    return this.Responder.process(
+  async deleteOneSetting(contactCustomFieldSettingId: number) {
+    return await new API(
+      this.apiKey
+    ).request<deleteContactFieldSettingResponse>(
       `/ContactCustomFieldSetting/${contactCustomFieldSettingId}`,
-      {
-        method: "DELETE",
-      }
+      undefined,
+      { method: "DELETE" }
     );
   }
 
@@ -228,14 +215,11 @@ export class ContactField {
    * @param contactCustomFieldSettingId ID of contact field you want to get the reference count
    * @returns
    */
-  async getReferenceCount(
-    contactCustomFieldSettingId: number
-  ): Promise<IResponse<getReferenceCountResponse>> {
-    return this.Responder.process(
+  async getOnesSettingReferenceCount(contactCustomFieldSettingId: number) {
+    return await new API(this.apiKey).request<getReferenceCountResponse>(
       `/ContactCustomFieldSetting/${contactCustomFieldSettingId}/getReferenceCount`,
-      {
-        method: "GET",
-      }
+      undefined,
+      { method: "GET" }
     );
   }
 }
