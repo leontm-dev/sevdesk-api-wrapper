@@ -24,9 +24,7 @@
   },
   "license": "ISC",
   "description": "This package is a typesafe wrapper for the sevDesk API",
-  "dependencies": {
-    "node-fetch": "^3.3.2"
-  },
+  "dependencies": {},
   "bugs": {
     "email": "lanneken09@gmail.com",
     "url": "https://github.com/leontm-dev/sevdesk-api-wrapper/issues"
