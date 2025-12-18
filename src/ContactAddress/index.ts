@@ -1,6 +1,6 @@
 // Project-Imports
 
-import { IResponse, Responder } from "../types/Response.js";
+import { API } from "../types/common.classes.js";
 import {
   createContactAddressBody,
   updateContactAddressBody,
@@ -22,26 +22,25 @@ For creating contact addresses have a look at our Swagger specification. Everyth
   * @link https://api.sevdesk.de/#tag/ContactAddress
  */
 export class ContactAddress {
-  private Responder: Responder;
-  constructor(apiKey: string) {
-    this.Responder = new Responder(apiKey, "1");
-  }
+  constructor(private apiKey: string) {}
   /**
    * Creates a new contact address.
    * @link https://api.sevdesk.de/#tag/ContactAddress/operation/createContactAddress
    * @param body Creation data
    * @returns Returns created contact address
    */
-  async createContactAddress(
-    body: createContactAddressBody
-  ): Promise<IResponse<createContactAddressResponse>> {
-    return this.Responder.process("/ContactAddress", {
-      headers: {
-        "Content-Type": "application/json",
-      },
-      method: "POST",
-      body: JSON.stringify(body),
-    });
+  async createOne(body: createContactAddressBody) {
+    return await new API(this.apiKey).request<createContactAddressResponse>(
+      "/ContactAddress",
+      undefined,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(body),
+      }
+    );
   }
 
   /**
@@ -49,10 +48,12 @@ export class ContactAddress {
    * @link https://api.sevdesk.de/#tag/ContactAddress/operation/getContactAddresses
    * @returns Array of objects (Contact address)
    */
-  async getContactAddresses(): Promise<IResponse<getContactAddressesResponse>> {
-    return this.Responder.process("/ContactAddress", {
-      method: "GET",
-    });
+  async getMany() {
+    return await new API(this.apiKey).request<getContactAddressesResponse>(
+      "/ContactAddress",
+      undefined,
+      { method: "GET" }
+    );
   }
 
   /**
@@ -61,12 +62,12 @@ export class ContactAddress {
    * @param contactAddressId ID of contact address to return
    * @returns
    */
-  async getContactAddressById(
-    contactAddressId: number
-  ): Promise<IResponse<getContactAddressByIdResponse>> {
-    return this.Responder.process(`/ContactAddress/${contactAddressId}`, {
-      method: "GET",
-    });
+  async getOne(contactAddressId: number) {
+    return await new API(this.apiKey).request<getContactAddressByIdResponse>(
+      `/ContactAddress/${contactAddressId}`,
+      undefined,
+      { method: "GET" }
+    );
   }
 
   /**
@@ -76,17 +77,16 @@ export class ContactAddress {
    * @param body Creation data
    * @returns Returns created contact address
    */
-  async updateContactAddress(
-    contactAddressId: number,
-    body: updateContactAddressBody
-  ): Promise<IResponse<updateContactAddressResponse>> {
-    return this.Responder.process(`/ContactAddress/${contactAddressId}`, {
-      headers: {
-        "Content-Type": "application/json",
-      },
-      method: "PUT",
-      body: JSON.stringify(body),
-    });
+  async updateOne(contactAddressId: number, body: updateContactAddressBody) {
+    return await new API(this.apiKey).request<updateContactAddressResponse>(
+      `/ContactAddress/${contactAddressId}`,
+      undefined,
+      {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      }
+    );
   }
 
   /**
@@ -94,11 +94,11 @@ export class ContactAddress {
    * @param contactAddressId Id of contact address resource to delete
    * @returns contact address deleted
    */
-  async deleteContactAddress(
-    contactAddressId: number
-  ): Promise<IResponse<deleteContactAddressResponse>> {
-    return this.Responder.process(`/ContactAddress/${contactAddressId}`, {
-      method: "DELETE",
-    });
+  async deleteOne(contactAddressId: number) {
+    return await new API(this.apiKey).request<deleteContactAddressResponse>(
+      `/ContactAddress/${contactAddressId}`,
+      undefined,
+      { method: "DELETE" }
+    );
   }
 }

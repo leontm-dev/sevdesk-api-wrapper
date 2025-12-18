@@ -1,6 +1,6 @@
 // Project-Imports
 
-import { sevClient } from "../../types/sevdeskModels";
+import { SevClient } from "../../types/models.types";
 
 // Code
 
@@ -80,7 +80,7 @@ For all categories, send a GET to /Category?objectType=ContactAddress. */
   /**
    * Client to which contact address belongs. Will be filled automatically
    */
-  sevClient: sevClient;
+  sevClient: SevClient;
   /**
    * Second name in address
    */
