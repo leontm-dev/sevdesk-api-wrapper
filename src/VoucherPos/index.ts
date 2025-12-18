@@ -1,34 +1,24 @@
 // Project-Imports
 
-import { Responder, IResponse } from "../types/Response";
+import { API } from "../types/common.classes";
 import { RetrieveVoucherPosResponse } from "./types/response.types";
 
 // Code
 
 export class VoucherPos {
-  private Responder: Responder;
-  constructor(apiKey: string) {
-    this.Responder = new Responder(apiKey, "1");
-  }
+  constructor(private apiKey: string) {}
 
-  async retrieveVoucherPositions(
-    voucherId: number
-  ): Promise<IResponse<RetrieveVoucherPosResponse>> {
-    return this.Responder.process(
+  async getMany(voucherId?: number) {
+    const queryObj: Record<string, string> = {};
+    if (voucherId) {
+      (queryObj["voucher[id]"] = voucherId.toString()),
+        (queryObj["voucher[objectName]"] = "Voucher");
+    }
+
+    return await new API(this.apiKey).request<RetrieveVoucherPosResponse>(
       "/VoucherPos",
-      {
-        method: "GET",
-      },
-      [
-        {
-          key: "voucher[id]",
-          value: voucherId.toString(),
-        },
-        {
-          key: "voucher[objectName]",
-          value: "Voucher",
-        },
-      ]
+      queryObj,
+      { method: "GET" }
     );
   }
 }
