@@ -1,5 +1,6 @@
 // Project-Imports
 
+import { API } from "../types/common.classes.js";
 import {
   createAccountingContactBody,
   updateAccountingContactBody,
@@ -11,7 +12,6 @@ import {
   updateAccountingContactResponse,
   deleteAccountingContactResponse,
 } from "./types/response.types.js";
-import { Responder, IResponse } from "../types/Response.js";
 
 // Code
 
@@ -22,34 +22,23 @@ As this endpoint is also pretty easy to understand, we won't cover it here, but 
   * @link https://api.sevdesk.de/#tag/AccountingContact
  */
 export class AccountingContact {
-  private Responder: Responder;
-  constructor(apiKey: string) {
-    this.Responder = new Responder(apiKey, "1");
-  }
+  constructor(private apiKey: string) {}
   /**
    * Returns all accounting contact which have been added up until now. Filters can be added.
    * @link https://api.sevdesk.de/#tag/AccountingContact/operation/getAccountingContact
    * @param contactId ID of contact for which you want the accounting contact.
    * @returns
    */
-  async getAccountingContact(
-    contactId: string
-  ): Promise<IResponse<getAccountingContactResponse>> {
-    return this.Responder.process(
-      "/AccountingContact",
-      {
-        method: "GET",
-      },
-      [
-        {
-          key: "contact[id]",
-          value: contactId,
-        },
-        {
-          key: "contact[objectName]",
-          value: "Contact",
-        },
-      ]
+  async getMany(contactId?: string) {
+    const queryObj: Record<string, string> = {};
+    if (contactId) {
+      queryObj["contact[id]"] = contactId;
+      queryObj["contact[objectName]"] = "Contact";
+    }
+    return await new API(this.apiKey).request<getAccountingContactResponse>(
+      "/AccountContact",
+      queryObj,
+      { method: "GET" }
     );
   }
 
@@ -59,16 +48,16 @@ export class AccountingContact {
    * @param body Creation data
    * @returns Returns created accounting contact
    */
-  async createAccountingContact(
-    body: createAccountingContactBody
-  ): Promise<IResponse<createAccountingContactResponse>> {
-    return this.Responder.process("/AccountingContact", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(body),
-    });
+  async create(body: createAccountingContactBody) {
+    return await new API(this.apiKey).request<createAccountingContactResponse>(
+      "/AccountingContact",
+      undefined,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      }
+    );
   }
 
   /**
@@ -77,12 +66,12 @@ export class AccountingContact {
    * @param accountingContactId ID of accounting contact to return
    * @returns
    */
-  async getAccountingContactById(
-    accountingContactId: number
-  ): Promise<IResponse<getAccountingContactByIdResponse>> {
-    return this.Responder.process(`/AccountingContact/${accountingContactId}`, {
-      method: "GET",
-    });
+  async getOne(accountingContactId: number) {
+    return await new API(this.apiKey).request<getAccountingContactByIdResponse>(
+      `/AccountingContact/${accountingContactId.toString()}`,
+      undefined,
+      { method: "GET" }
+    );
   }
 
   /**
@@ -92,17 +81,16 @@ export class AccountingContact {
    * @param body Update data
    * @returns Returns changed accounting contact resource
    */
-  async updateAccountingContact(
-    accountingContactId: number,
-    body: updateAccountingContactBody
-  ): Promise<IResponse<updateAccountingContactResponse>> {
-    return this.Responder.process(`/AccountingContact/${accountingContactId}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(body),
-    });
+  async update(accountingContactId: number, body: updateAccountingContactBody) {
+    return await new API(this.apiKey).request<updateAccountingContactResponse>(
+      `/AccountingContact/${accountingContactId}`,
+      undefined,
+      {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      }
+    );
   }
 
   /**
@@ -111,11 +99,11 @@ export class AccountingContact {
    * @param accountingContactId Id of accounting contact resource to delete
    * @returns
    */
-  async deleteAccountingContact(
-    accountingContactId: number
-  ): Promise<IResponse<deleteAccountingContactResponse>> {
-    return this.Responder.process(`/AccountingContact/${accountingContactId}`, {
-      method: "DELETE",
-    });
+  async delete(accountingContactId: number) {
+    return await new API(this.apiKey).request<deleteAccountingContactResponse>(
+      `/AccountingContact/${accountingContactId}`,
+      undefined,
+      { method: "DELETE" }
+    );
   }
 }

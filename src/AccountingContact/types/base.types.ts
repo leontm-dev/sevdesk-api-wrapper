@@ -1,6 +1,6 @@
 // Project-Imports
 
-import { sevClient } from "../../types/sevdeskModels";
+import { SevClient } from "../../types/models.types";
 
 // Code
 
@@ -37,7 +37,7 @@ export type AccountingContact = {
   /**
    * Client to which accounting contact belongs. Will be filled automatically
    */
-  sevClient: sevClient;
+  sevClient: SevClient;
   /**
    * Debitor number of the accounting contact.
    */
