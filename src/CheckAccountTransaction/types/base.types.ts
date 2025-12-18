@@ -1,6 +1,6 @@
 // Project-Imports
 
-import { sevClient } from "../../types/sevdeskModels";
+import { SevClient } from "../../types/models.types";
 
 // Code
 
@@ -24,7 +24,7 @@ export type CheckAccountTransaction = {
   /**
    * Client to which check account transaction belongs. Will be filled automatically
    */
-  sevClient: sevClient;
+  sevClient: SevClient;
   /**
    * Date the check account transaction was imported
    */

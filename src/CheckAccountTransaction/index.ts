@@ -1,6 +1,5 @@
 // Project-Imports
 
-import { IResponse, Responder } from "../types/Response.js";
 import {
   getTransactionResponse,
   createTransactionResponse,
@@ -13,6 +12,7 @@ import {
   createTransactionBody,
   updateCheckAccountTransactionBody,
 } from "./types/body.types.js";
+import { API } from "../types/common.classes.js";
 
 // Code
 
@@ -23,10 +23,7 @@ For a correct bookkeeping, there is always one or multiple transactions linked t
   * @link https://api.sevdesk.de/#tag/CheckAccountTransaction
  */
 export class CheckAccountTransaction {
-  private Responder: Responder;
-  constructor(apiKey: string) {
-    this.Responder = new Responder(apiKey, "1");
-  }
+  constructor(private apiKey: string) {}
   /**
    * Retrieve all transactions depending on the filters defined in the query.
    * @link https://api.sevdesk.de/#tag/CheckAccountTransaction/operation/getTransactions
@@ -40,7 +37,7 @@ export class CheckAccountTransaction {
    * @param onlyDebit Only retrieve debit transactions
    * @returns Array of objects (CheckAccountTransaction model)
    */
-  async getTransactions(
+  async getMany(
     checkAccountId?: number,
     isBooked?: boolean,
     paymtPurpose?: string,
@@ -49,50 +46,24 @@ export class CheckAccountTransaction {
     payeePayerName?: string,
     onlyCredit?: boolean,
     onlyDebit?: boolean
-  ): Promise<IResponse<getTransactionResponse>> {
-    return this.Responder.process(
+  ) {
+    const queryObj: Record<string, string> = {};
+    if (checkAccountId) {
+      queryObj["checkAccount[id]"] = checkAccountId.toString();
+      queryObj["checkAccount[objectName]"] = "CheckAccount";
+    }
+    if (isBooked) queryObj["isBooked"] = String(isBooked);
+    if (paymtPurpose) queryObj["paymtPurpose"] = paymtPurpose;
+    if (startDate) queryObj["startDate"] = new Date(startDate).toISOString();
+    if (endDate) queryObj["endDate"] = new Date(endDate).toISOString();
+    if (payeePayerName) queryObj["payeePayerName"] = payeePayerName;
+    if (onlyCredit) queryObj["onlyCredit"] = String(onlyCredit);
+    if (onlyDebit) queryObj["onlyDebit"] = String(onlyDebit);
+
+    return await new API(this.apiKey).request<getTransactionResponse>(
       "/CheckAccountTransaction",
-      {
-        method: "GET",
-      },
-      [
-        {
-          key: "checkAccount[id]",
-          value: checkAccountId,
-        },
-        {
-          key: "checkAccount[objectName]",
-          value: "CheckAccount",
-        },
-        {
-          key: "isBooked",
-          value: isBooked,
-        },
-        {
-          key: "paymtPurpose",
-          value: paymtPurpose,
-        },
-        {
-          key: "startDate",
-          value: startDate ? startDate.toISOString() : undefined,
-        },
-        {
-          key: "endDate",
-          value: endDate ? endDate.toISOString() : undefined,
-        },
-        {
-          key: "payeePayerName",
-          value: payeePayerName,
-        },
-        {
-          key: "onlyCredit",
-          value: onlyCredit,
-        },
-        {
-          key: "onlyDebit",
-          value: onlyDebit,
-        },
-      ]
+      queryObj,
+      { method: "GET" }
     );
   }
 
@@ -101,16 +72,16 @@ export class CheckAccountTransaction {
    * @link https://api.sevdesk.de/#tag/CheckAccountTransaction/operation/createTransaction
    * @param body Creation data. Please be aware, that you need to provide at least all required parameter of the CheckAccountTransaction model!
    */
-  async createTransaction(
-    body: createTransactionBody
-  ): Promise<IResponse<createTransactionResponse>> {
-    return this.Responder.process("/CheckAccountTransaction", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(body),
-    });
+  async createOne(body: createTransactionBody) {
+    return await new API(this.apiKey).request<createTransactionResponse>(
+      "/CheckAccountTransaction",
+      undefined,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      }
+    );
   }
 
   /**
@@ -119,14 +90,13 @@ export class CheckAccountTransaction {
    * @param checkAccountTransactionId ID of check account transaction
    * @returns Array of objects (CheckAccountTransaction model)
    */
-  async getCheckAccountTransactionById(
-    checkAccountTransactionId: number
-  ): Promise<IResponse<getCheckAccountTransactionByIdResponse>> {
-    return this.Responder.process(
+  async getOne(checkAccountTransactionId: number) {
+    return await new API(
+      this.apiKey
+    ).request<getCheckAccountTransactionByIdResponse>(
       `/CheckAccountTransaction/${checkAccountTransactionId}`,
-      {
-        method: "GET",
-      }
+      undefined,
+      { method: "GET" }
     );
   }
 
@@ -137,17 +107,18 @@ export class CheckAccountTransaction {
    * @param body Update data
    * @returns Return changed check account resource
    */
-  async updateCheckAccountTransaction(
+  async updateOne(
     checkAccountTransactionId: number,
     body: updateCheckAccountTransactionBody
-  ): Promise<IResponse<updateCheckAccountTransactionResponse>> {
-    return this.Responder.process(
+  ) {
+    return await new API(
+      this.apiKey
+    ).request<updateCheckAccountTransactionResponse>(
       `/CheckAccountTransaction/${checkAccountTransactionId}`,
+      undefined,
       {
         method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),
       }
     );
@@ -157,14 +128,13 @@ export class CheckAccountTransaction {
    * @param checkAccountTransactionId Id of check account transaction to delete
    * @returns check account transaction deleted
    */
-  async deleteCheckAccountTransaction(
-    checkAccountTransactionId: number
-  ): Promise<IResponse<deleteCheckAccountTransactionResponse>> {
-    return this.Responder.process(
+  async deleteOne(checkAccountTransactionId: number) {
+    return await new API(
+      this.apiKey
+    ).request<deleteCheckAccountTransactionResponse>(
       `/CheckAccountTransaction/${checkAccountTransactionId}`,
-      {
-        method: "DELETE",
-      }
+      undefined,
+      { method: "DELETE" }
     );
   }
   /**
@@ -176,14 +146,11 @@ Linked invoices, credit notes or vouchers cannot be changed when the transaction
    * @param checkAccountTransactionId ID of the transaction to enshrine
    * @returns ID of the transaction to enshrine
    */
-  async enshrine(
-    checkAccountTransactionId: number
-  ): Promise<IResponse<enshrineResponse>> {
-    return this.Responder.process(
+  async enshrineOne(checkAccountTransactionId: number) {
+    return await new API(this.apiKey).request<enshrineResponse>(
       `/CheckAccountTransaction/${checkAccountTransactionId}/enshrine`,
-      {
-        method: "POST",
-      }
+      undefined,
+      { method: "PUT" }
     );
   }
 }
