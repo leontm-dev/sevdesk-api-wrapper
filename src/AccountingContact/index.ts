@@ -48,7 +48,7 @@ export class AccountingContact {
    * @param body Creation data
    * @returns Returns created accounting contact
    */
-  async create(body: createAccountingContactBody) {
+  async createOne(body: createAccountingContactBody) {
     return await new API(this.apiKey).request<createAccountingContactResponse>(
       "/AccountingContact",
       undefined,
@@ -81,7 +81,10 @@ export class AccountingContact {
    * @param body Update data
    * @returns Returns changed accounting contact resource
    */
-  async update(accountingContactId: number, body: updateAccountingContactBody) {
+  async updateOne(
+    accountingContactId: number,
+    body: updateAccountingContactBody
+  ) {
     return await new API(this.apiKey).request<updateAccountingContactResponse>(
       `/AccountingContact/${accountingContactId}`,
       undefined,
@@ -99,7 +102,7 @@ export class AccountingContact {
    * @param accountingContactId Id of accounting contact resource to delete
    * @returns
    */
-  async delete(accountingContactId: number) {
+  async deleteOne(accountingContactId: number) {
     return await new API(this.apiKey).request<deleteAccountingContactResponse>(
       `/AccountingContact/${accountingContactId}`,
       undefined,
