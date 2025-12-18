@@ -1,6 +1,6 @@
 // Project-Imports
 
-import type { SevClient } from "../../types/models.classes";
+import type { SevClient } from "../../types/models.types";
 
 // Code
 
