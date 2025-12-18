@@ -1,6 +1,6 @@
 // Project-Imports
 
-import { sevClient } from "../../types/sevdeskModels";
+import { SevClient } from "../../types/models.types";
 
 // Code
 
@@ -65,5 +65,5 @@ For all communication way keys please send a GET to /CommunicationWayKey.
   /**
    * Client to which communication way key belongs. Will be filled automatically
    */
-  sevClient: sevClient;
+  sevClient: SevClient;
 };

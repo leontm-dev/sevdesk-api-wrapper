@@ -1,6 +1,5 @@
 // Project-Imports
 
-import { IResponse, Responder } from "../types/Response.js";
 import {
   createCommunicationWayResponse,
   deleteCommunicationWayResponse,
@@ -13,6 +12,7 @@ import {
   createCommunicationWayBody,
   updateCommunicationWayBody,
 } from "./types/body.types.js";
+import { API } from "../types/common.classes.js";
 
 // Code
 
@@ -36,10 +36,7 @@ Invoicing (ID: 8)
   * @link https://api.sevdesk.de/#tag/CommunicationWay
  */
 export class CommunicationWay {
-  private Responder: Responder;
-  constructor(apiKey: string) {
-    this.Responder = new Responder(apiKey, "1");
-  }
+  constructor(private apiKey: string) {}
   /**
    * Returns all communication ways which have been added up until now. Filters can be added.
    * @link https://api.sevdesk.de/#tag/CommunicationWay/operation/getCommunicationWays
@@ -48,34 +45,23 @@ export class CommunicationWay {
    * @param main Define if you only want the main communication way.
    * @returns Array of objects (CommunicationWay model)
    */
-  async getCommunicationWays(
+  async getMany(
     contactId?: string,
     type?: "PHONE" | "EMAIL" | "WEB" | "MOBILE",
     main?: "0" | "1"
-  ): Promise<IResponse<getCommunicationWaysResponse>> {
-    return this.Responder.process(
+  ) {
+    const queryObj: Record<string, string> = {};
+    if (contactId) {
+      queryObj["contact[id]"] = contactId;
+      queryObj["contact[objectName]"] = "Contact";
+    }
+    if (type) queryObj["type"] = type;
+    if (main) queryObj["main"] = main;
+
+    return await new API(this.apiKey).request<getCommunicationWaysResponse>(
       "/CommunicationWay",
-      {
-        method: "GET",
-      },
-      [
-        {
-          key: "contact[id]",
-          value: contactId,
-        },
-        {
-          key: "contact[objectName]",
-          value: "Contact",
-        },
-        {
-          key: "type",
-          value: type,
-        },
-        {
-          key: "main",
-          value: main,
-        },
-      ]
+      queryObj,
+      { method: "GET" }
     );
   }
 
@@ -85,16 +71,16 @@ export class CommunicationWay {
    * @param body Creation data
    * @returns Returns created contact communication way
    */
-  async createCommunicationWay(
-    body: createCommunicationWayBody
-  ): Promise<IResponse<createCommunicationWayResponse>> {
-    return this.Responder.process("/CommunicationWay", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(body),
-    });
+  async createOne(body: createCommunicationWayBody) {
+    return await new API(this.apiKey).request<createCommunicationWayResponse>(
+      "/CommunicationWay",
+      undefined,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      }
+    );
   }
 
   /**
@@ -103,12 +89,12 @@ export class CommunicationWay {
    * @param communicationWayId ID of communication way to return
    * @returns Array of objects (CommunicationWay model)
    */
-  async getCommunicationWayById(
-    communicationWayId: number
-  ): Promise<IResponse<getCommunicationWayByIdResponse>> {
-    return this.Responder.process(`/CommunicationWay/${communicationWayId}`, {
-      method: "GET",
-    });
+  async getOne(communicationWayId: number) {
+    return await new API(this.apiKey).request<getCommunicationWayByIdResponse>(
+      `/CommunicationWay/${communicationWayId}`,
+      undefined,
+      { method: "GET" }
+    );
   }
 
   /**
@@ -116,12 +102,12 @@ export class CommunicationWay {
    * @param communicationWayId Id of communication way resource to delete
    * @returns Communication way deleted
    */
-  async deleteCommunicationWay(
-    communicationWayId: number
-  ): Promise<IResponse<deleteCommunicationWayResponse>> {
-    return this.Responder.process(`/CommunicationWay/${communicationWayId}`, {
-      method: "DELETE",
-    });
+  async deleteOne(communicationWayId: number) {
+    return await new API(this.apiKey).request(
+      `/CommunicationWay/${communicationWayId}`,
+      undefined,
+      { method: "DELETE" }
+    );
   }
 
   /**
@@ -131,17 +117,19 @@ export class CommunicationWay {
    * @param body Update data
    * @returns Returns changed CommunicationWay resource
    */
-  async updateCommunicationWay(
+  async updateOne(
     communicationWayId: number,
     body: updateCommunicationWayBody
-  ): Promise<IResponse<updateCommunicationWayResponse>> {
-    return this.Responder.process(`/CommunicationWay/${communicationWayId}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(body),
-    });
+  ) {
+    return await new API(this.apiKey).request<updateCommunicationWayResponse>(
+      `/CommunicationWay/${communicationWayId}`,
+      undefined,
+      {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      }
+    );
   }
 
   /**
@@ -149,11 +137,11 @@ export class CommunicationWay {
    * @link https://api.sevdesk.de/#tag/CommunicationWay/operation/getCommunicationWayKeys
    * @returns Array of objects
    */
-  async getCommunicationWayKeys(): Promise<
-    IResponse<getCommunicationWayKeysResponse>
-  > {
-    return this.Responder.process("/CommunicationWayKey", {
-      method: "GET",
-    });
+  async getManyKeys() {
+    return await new API(this.apiKey).request<getCommunicationWayKeysResponse>(
+      "/CommunicationWayKey",
+      undefined,
+      { method: "GET" }
+    );
   }
 }
