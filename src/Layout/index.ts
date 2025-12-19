@@ -16,6 +16,9 @@ import {
 
 // Code
 
+/**
+ * @link https://api.sevdesk.de/#tag/Layout
+ */
 export class Layout {
   constructor(private apiKey: string) {}
 
