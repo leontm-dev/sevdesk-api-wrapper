@@ -1,7 +1,7 @@
 // Project-Imports
 
 import { SevClient } from "../../types/models.types";
-import { ReceiptGuideDataTransfer } from "../../VoucherPos/types/base.types";
+import { ReceiptGuideDataTransfer } from "./base.types";
 import { VoucherPosV1 } from "../../VoucherPos/types/base.v1.types";
 import { VoucherPosV2 } from "../../VoucherPos/types/base.v2.types";
 import { VoucherV1 } from "./base.v1.types";
