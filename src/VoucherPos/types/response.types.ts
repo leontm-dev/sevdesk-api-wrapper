@@ -5,6 +5,6 @@ import { VoucherPosV2 } from "./base.v2.types";
 
 // Code
 
-export type RetrieveVoucherPosResponse = {
+export type VoucherPosModule_Response_GetMany = {
   objects: (VoucherPosV1 & VoucherPosV2)[];
 };

@@ -1,7 +1,7 @@
 // Project-Imports
 
 import { API } from "../types/common.classes";
-import { RetrieveVoucherPosResponse } from "./types/response.types";
+import { VoucherPosModule_Response_GetMany } from "./types/response.types";
 
 // Code
 
@@ -21,10 +21,10 @@ export class VoucherPos {
         (queryObj["voucher[objectName]"] = "Voucher");
     }
 
-    return await new API(this.apiKey).request<RetrieveVoucherPosResponse>(
-      "/VoucherPos",
-      queryObj,
-      { method: "GET" }
-    );
+    return await new API(
+      this.apiKey
+    ).request<VoucherPosModule_Response_GetMany>("/VoucherPos", queryObj, {
+      method: "GET",
+    });
   }
 }
