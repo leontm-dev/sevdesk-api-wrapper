@@ -10,6 +10,16 @@ export type SevClient = {
    */
   objectName: "SevClient";
 };
+export type SevUser = {
+  /**
+   * Unique identifier of the user
+   */
+  id: string;
+  /**
+   * Model name, which is 'SevUser'
+   */
+  objectName: "SevUser";
+};
 export type Discounts = {
   /**
    * The id of the discount
