@@ -1,12 +1,24 @@
 // Code
 
-export type UpdateTagBody = {
+export type TagModule_Body_UpdateOne = {
+  /**
+   * The name of the tag u want to update
+   */
   name: string;
 };
-export type CreateANewTagBody = {
+export type TagModule_Body_CreateOne = {
+  /**
+   * Name of the tag
+   */
   name: string;
   object: {
+    /**
+     * Id of the invoice/order/voucher/creditNote
+     */
     id: number;
+    /**
+     * Model name
+     */
     objectName: "Invoice" | "Voucher" | "Order" | "CreditNote";
   };
 };

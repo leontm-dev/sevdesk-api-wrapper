@@ -4,17 +4,17 @@ import type { Tag } from "./base.types";
 
 // Code
 
-export type RetrieveTagsResponse = {
+export type TagModule_Response_GetMany = {
   objects: Tag[];
 };
-export type FindTagByIDREsponse = {
+export type TagModule_Response_GetOne = {
   objects: Tag[];
 };
-export type UpdateTagResponse = Tag;
-export type DeletesATagResponse = {
+export type TagModule_Response_UpdateOne = Tag;
+export type TagModule_Response_DeleteOne = {
   objects: [null];
 };
-export type CreateANewTagResponse = Tag;
-export type RetrieveTagRelationsResponse = {
+export type TagModule_Response_CreateOne = Tag;
+export type TagModule_Response_GetManyRelations = {
   objects: Tag[];
 };

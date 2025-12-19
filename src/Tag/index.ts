@@ -1,18 +1,23 @@
 // Project-Imports
 
 import { API } from "../types/common.classes";
-import { CreateANewTagBody, UpdateTagBody } from "./types/body.types";
 import {
-  CreateANewTagResponse,
-  DeletesATagResponse,
-  FindTagByIDREsponse,
-  RetrieveTagRelationsResponse,
-  RetrieveTagsResponse,
-  UpdateTagResponse,
+  TagModule_Body_CreateOne,
+  TagModule_Body_UpdateOne,
+} from "./types/body.types";
+import {
+  TagModule_Response_CreateOne,
+  TagModule_Response_DeleteOne,
+  TagModule_Response_GetManyRelations,
+  TagModule_Response_GetOne,
+  TagModule_Response_UpdateOne,
 } from "./types/response.types";
 
 // Code
 
+/**
+ * @link https://api.sevdesk.de/#tag/Tag
+ */
 export class Tag {
   constructor(private apiKey: string) {}
 
@@ -28,11 +33,11 @@ export class Tag {
     if (id) queryObj["id"] = id.toString();
     if (name) queryObj["name"] = name;
 
-    return await new API(this.apiKey).request<RetrieveTagsResponse>(
-      "/Tag",
-      queryObj,
-      { method: "GET" }
-    );
+    return await new API(
+      this.apiKey
+    ).request<TagModule_Response_GetManyRelations>("/Tag", queryObj, {
+      method: "GET",
+    });
   }
 
   /**
@@ -42,7 +47,7 @@ export class Tag {
    * @returns Array of objects (Tag model)
    */
   async getOne(tagId: number) {
-    return await new API(this.apiKey).request<FindTagByIDREsponse>(
+    return await new API(this.apiKey).request<TagModule_Response_GetOne>(
       `/Tag/${tagId}`,
       undefined,
       { method: "GET" }
@@ -56,8 +61,8 @@ export class Tag {
    * @param body
    * @returns
    */
-  async updateOne(tagId: number, body: UpdateTagBody) {
-    return await new API(this.apiKey).request<UpdateTagResponse>(
+  async updateOne(tagId: number, body: TagModule_Body_UpdateOne) {
+    return await new API(this.apiKey).request<TagModule_Response_UpdateOne>(
       `/Tag/${tagId}`,
       undefined,
       {
@@ -75,7 +80,7 @@ export class Tag {
    * @returns Array of any
    */
   async deleteOne(tagId: number) {
-    return await new API(this.apiKey).request<DeletesATagResponse>(
+    return await new API(this.apiKey).request<TagModule_Response_DeleteOne>(
       `/Tag/${tagId}`,
       undefined,
       { method: "DELETE" }
@@ -88,8 +93,8 @@ export class Tag {
    * @param body
    * @returns
    */
-  async createOne(body: CreateANewTagBody) {
-    return await new API(this.apiKey).request<CreateANewTagResponse>(
+  async createOne(body: TagModule_Body_CreateOne) {
+    return await new API(this.apiKey).request<TagModule_Response_CreateOne>(
       "/Tag/Factory/create",
       undefined,
       {
@@ -106,10 +111,10 @@ export class Tag {
    * @returns Array of objects (Tag model)
    */
   async getManyRelations() {
-    return await new API(this.apiKey).request<RetrieveTagRelationsResponse>(
-      "/TagRelation",
-      undefined,
-      { method: "GET" }
-    );
+    return await new API(
+      this.apiKey
+    ).request<TagModule_Response_GetManyRelations>("/TagRelation", undefined, {
+      method: "GET",
+    });
   }
 }
