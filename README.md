@@ -1,65 +1,51 @@
-# sevdesk API Wrapper
+# sevdesk API SDK for JavaScript and TypeScript
 
-This extension works around the official sevdesk api. It helps interacting with this api, all easy and typesafe.
+The sevdesk API SDK for JavaScript and TypeScript is an unofficial open-source API wrapper to improve interactions with the sevdesk API.
+It comes with preconfigured types for models, responses and request bodies.
 
-Current version: v0.0.3
+[![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](https://choosealicense.com/licenses/mit/)![NPM Last Update](https://img.shields.io/npm/last-update/sevdesk-api-wrapper)![NPM Downloads](https://img.shields.io/npm/dm/sevdesk-api-wrapper)
 
-All of these feature/functions are directly taken from the [official sevdesk API Documentation](https://api.sevdesk.de). Still this package is not supported by sevdesk GmbH in any kind or way.
+## Acknowledgements
 
-It is just a package I used to automate the interaction with sevdesk for our [finda](https://payments.find-a.app) service.
+This project is based on the official [sevdesk API Documentation](https://api.sevdesk.de/#section/General-information). If you run into any problem or if you suddenly need a error description to speed up your debug process, check their docs first.
+
+Information that describe types, classes and type-properties are directly from the sevdesk API Documentation, where you will find further explanation. The contents have only been changes in terms of spelling corrections.
+
+## Documentation
+
+[Documentation](https://api.sevdesk.de/#section/General-information)
 
 ## Installation
 
-Install this package as you would install every other npm package.
-
-With npm:
+Install sevdesk-api-wrapper with npm or your desired node package manager:
 
 ```bash
-  npm install sevdesk-api-wrapper
+  node install sevdesk-api-wrapper
 ```
-
-With yarn:
 
 ```bash
   yarn add sevdesk-api-wrapper
 ```
 
-## Documentation
+## Usage/Examples
 
-[Official sevdesk API documentation](https://api.sevdesk.de/)
+To use this package you will need a sevdesk API key. A guide on how to accquire such a key can be found here: https://api.sevdesk.de/#section/Authentication-and-Authorization
 
-## Roadmap
+Once you have installed the package, you can go ahead and import the sevdeskAPIClient:
 
-This package aims to grant full typesafe support for the whole sevdesk api:
+```javascript
+import sevdeskAPIClient from "sevdesk-api-wrapper";
 
-| sevdesk Feature                                                                | Supported? |
-| ------------------------------------------------------------------------------ | ---------- |
-| [Basics](https://api.sevdesk.de/#tag/Basics)                                   | ✅         |
-| [CheckAccount](https://api.sevdesk.de/#tag/CheckAccount)                       | ✅         |
-| [CheckAccountTransaction](https://api.sevdesk.de/#tag/CheckAccountTransaction) | ✅         |
-| [AccountingContact](https://api.sevdesk.de/#tag/AccountingContact)             | ✅         |
-| [CommunicationWay](https://api.sevdesk.de/#tag/CommunicationWay)               | ✅         |
-| [ContactAddress](https://api.sevdesk.de/#tag/ContactAddress)                   | ✅         |
-| [Contact](https://api.sevdesk.de/#tag/Contact)                                 | ✅         |
-| [ContactField](https://api.sevdesk.de/#tag/ContactField)                       | ✅         |
-| [CreditNote](https://api.sevdesk.de/#tag/CreditNote)                           | ❌         |
-| [CreditNotePos](https://api.sevdesk.de/#tag/CreditNotePos)                     | ❌         |
-| [Export](https://api.sevdesk.de/#tag/Export)                                   | ❌         |
-| [Part](https://api.sevdesk.de/#tag/Part)                                       | ❌         |
-| [Invoice](https://api.sevdesk.de/#tag/Invoice)                                 | ❌         |
-| [InvoicePos](https://api.sevdesk.de/#tag/InvoicePos)                           | ❌         |
-| [Layout](https://api.sevdesk.de/#tag/Layout)                                   | ❌         |
-| [Order](https://api.sevdesk.de/#tag/Order)                                     | ❌         |
-| [OrderPos](https://api.sevdesk.de/#tag/OrderPos)                               | ❌         |
-| [Voucher](https://api.sevdesk.de/#tag/Voucher)                                 | ❌         |
-| [VoucherPos](https://api.sevdesk.de/#tag/VoucherPos)                           | ❌         |
-| [Report](https://api.sevdesk.de/#tag/Report)                                   | ❌         |
-| [Tag](https://api.sevdesk.de/#tag/Tag)                                         | ❌         |
-| [sevdesk-Update 2.0](https://api.sevdesk.de/#tag/sevdesk-Update-2.0)           | ❌         |
+const sevdeskAPI = new sevdeskAPIClient("your-api-key");
+```
+
+Be aware, sevdesk API keys are regarded as secrets. It is adwised to save them in a .env file for some other form of save key-storage and not directly inside of your active codebase.
 
 ## Contributing
 
 Contributions are always welcome!
+
+This is my first API SDK, so a learn-by-doing type of solution. If you have any ideas for better maintainablity, readablity or the code in general, feel free to make a Pull Request.
 
 See `contributing.md` for ways to get started.
 
@@ -68,3 +54,7 @@ Please adhere to this project's `code of conduct`.
 ## Authors
 
 - [@leontm-dev](https://www.github.com/leontm-dev)
+
+## Appendix
+
+As already stated, this project is not maintained nor funded by [sevDesk GmbH](https://sevdesk.de/impressum/) or any associated company/organization. It is also not made to generate profits are be monetized in any way.
