@@ -1,5 +1,7 @@
 // Code
 
+import { Order } from "../Order/types/base.types";
+
 export type SevClient = {
   /**
    * Unique identifier of the client
@@ -61,4 +63,58 @@ export type Discounts = {
    * Defines is the Discount net or gross (0 = net, 1 = gross)
    */
   isNet: string;
+};
+export type Email = {
+  /**
+   * The email id
+   */
+  id: number;
+  /**
+   * The email object name
+   */
+  objectName: string;
+  /**
+   * Date of mail creation
+   */
+  create: string;
+  /**
+   * Date of last mail update
+   */
+  update: string;
+  /**
+   * Order model
+   */
+  object: Order;
+  /**
+   * The sender of the email
+   */
+  from: string;
+  /**
+   * The recipient of the email
+   */
+  to: string;
+  /**
+   * The subject of the email
+   */
+  subject: string;
+  /**
+   * The text of the email
+   */
+  text: string | null;
+  /**
+   * Client to which mail belongs. Will be filled automatically
+   */
+  sevClient: SevClient;
+  /**
+   * A list of mail addresses which are in the cc
+   */
+  cc: string | null;
+  /**
+   * A list of mail addresses which are in the bcc
+   */
+  bcc: string | null;
+  /**
+   * Date the mail arrived
+   */
+  arrived: string | null;
 };
