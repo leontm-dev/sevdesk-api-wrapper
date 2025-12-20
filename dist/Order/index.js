@@ -44,6 +44,16 @@ var Order = /** @class */ (function () {
     function Order(apiKey) {
         this.apiKey = apiKey;
     }
+    /**
+     * There are a multitude of parameter which can be used to filter. A few of them are attached but for a complete list please check out this list
+     * @link https://api.sevdesk.de/#tag/Order/operation/getOrders
+     * @param status Status of the order
+     * @param orderNumber Retrieve all orders with this order number
+     * @param startDate Retrieve all orders with a date equal or higher
+     * @param endDate Retrieve all orders with a date equal or lower
+     * @param contactId Retrieve all orders with this contact. Must be provided with contact[objectName]
+     * @returns
+     */
     Order.prototype.getMany = function (status, orderNumber, startDate, endDate, contactId) {
         return __awaiter(this, void 0, void 0, function () {
             var queryObj;
@@ -71,6 +81,12 @@ var Order = /** @class */ (function () {
             });
         });
     };
+    /**
+     * Creates an order to which positions can be added later.
+     * @link https://api.sevdesk.de/#tag/Order/operation/createOrder
+     * @param body Creation data. Please be aware, that you need to provide at least all required parameter of the order model!
+     * @returns created voucher
+     */
     Order.prototype.createOne = function (body) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
@@ -85,6 +101,12 @@ var Order = /** @class */ (function () {
             });
         });
     };
+    /**
+     * Returns a single order
+     * @link https://api.sevdesk.de/#tag/Order/operation/getOrderById
+     * @param orderId ID of order to return
+     * @returns
+     */
     Order.prototype.getOne = function (orderId) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
@@ -97,6 +119,13 @@ var Order = /** @class */ (function () {
             });
         });
     };
+    /**
+     * Update an order
+     * @link https://api.sevdesk.de/#tag/Order/operation/updateOrder
+     * @param orderId ID of order to update
+     * @param body Update data
+     * @returns changed order resource
+     */
     Order.prototype.updateOne = function (orderId, body) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
@@ -111,6 +140,11 @@ var Order = /** @class */ (function () {
             });
         });
     };
+    /**
+     * @link https://api.sevdesk.de/#tag/Order/operation/deleteOrder
+     * @param orderId Id of order resource to delete
+     * @returns
+     */
     Order.prototype.deleteOne = function (orderId) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
@@ -123,36 +157,99 @@ var Order = /** @class */ (function () {
             });
         });
     };
-    Order.prototype.getManyOrderPositions = function (orderId) {
+    /**
+     * Returns all positions of an order
+     * @link https://api.sevdesk.de/#tag/Order/operation/getOrderPositionsById
+     * @param orderId ID of order to return the positions
+     * @param limit limits the number of entries returned
+     * @param offset set the index where the returned entries start
+     * @param embed Get some additional information. Embed can handle multiple values, they must be separated by comma.
+     * @returns
+     */
+    Order.prototype.getOnesPositions = function (orderId, limit, offset, embed) {
         return __awaiter(this, void 0, void 0, function () {
+            var queryObj;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, new common_classes_1.API(this.apiKey).request("/Order/".concat(orderId, "/getPositions"), undefined, { method: "GET" })];
+                    case 0:
+                        queryObj = {};
+                        if (limit)
+                            queryObj["limit"] = limit.toString();
+                        if (offset)
+                            queryObj["offset"] = offset.toString();
+                        if (embed)
+                            queryObj["embed"] = embed.join(",");
+                        return [4 /*yield*/, new common_classes_1.API(this.apiKey).request("/Order/".concat(orderId, "/getPositions"), queryObj, { method: "GET" })];
                     case 1: return [2 /*return*/, _a.sent()];
                 }
             });
         });
     };
-    Order.prototype.getManyOrderDiscounts = function (orderId) {
+    /**
+     * Returns all discounts of an order
+     * @link https://api.sevdesk.de/#tag/Order/operation/getDiscounts
+     * @param orderId ID of order to return the positions
+     * @param limit limits the number of entries returned
+     * @param offset set the index where the returned entries start
+     * @param embed Get some additional information. Embed can handle multiple values, they must be separated by comma.
+     * @returns
+     */
+    Order.prototype.getOnesDiscounts = function (orderId, limit, offset, embed) {
         return __awaiter(this, void 0, void 0, function () {
+            var queryObj;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, new common_classes_1.API(this.apiKey).request("/Order/".concat(orderId, "/getDiscounts"), undefined, { method: "GET" })];
+                    case 0:
+                        queryObj = {};
+                        if (limit)
+                            queryObj["limit"] = limit.toString();
+                        if (offset)
+                            queryObj["offset"] = offset.toString();
+                        if (embed)
+                            queryObj["embed"] = embed.join(",");
+                        return [4 /*yield*/, new common_classes_1.API(this.apiKey).request("/Order/".concat(orderId, "/getDiscounts"), queryObj, { method: "GET" })];
                     case 1: return [2 /*return*/, _a.sent()];
                 }
             });
         });
     };
-    Order.prototype.getManyRelatedObjects = function (orderId) {
+    /**
+     * Get related objects of a specified order
+     * @link https://api.sevdesk.de/#tag/Order/operation/getRelatedObjects
+     * @param orderId ID of order to return the positions
+     * @param limit limits the number of entries returned
+     * @param offset set the index where the returned entries start
+     * @param embed Get some additional information. Embed can handle multiple values, they must be separated by comma.
+     * @returns
+     */
+    Order.prototype.getOnesRelatedObjects = function (orderId, limit, offset, embed) {
         return __awaiter(this, void 0, void 0, function () {
+            var queryObj;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, new common_classes_1.API(this.apiKey).request("/Order/".concat(orderId, "/getRelatedObjects"), undefined, { method: "GET" })];
+                    case 0:
+                        queryObj = {};
+                        if (limit)
+                            queryObj["limit"] = limit.toString();
+                        if (offset)
+                            queryObj["offset"] = offset.toString();
+                        if (embed)
+                            queryObj["embed"] = embed.join(",");
+                        return [4 /*yield*/, new common_classes_1.API(this.apiKey).request("/Order/".concat(orderId, "/getRelatedObjects"), queryObj, { method: "GET" })];
                     case 1: return [2 /*return*/, _a.sent()];
                 }
             });
         });
     };
+    /**
+     * This endpoint sends the specified order to a customer via email.
+  This will automatically mark the order as sent.
+  Please note, that in production an order is not allowed to be changed after this happened!
+     * @link https://api.sevdesk.de/#tag/Order/operation/sendorderViaEMail
+     * @param orderId ID of order to be sent via email
+     * @param body Mail data
+     * @returns
+     */
     Order.prototype.sendOneViaEmail = function (orderId, body) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
@@ -167,6 +264,13 @@ var Order = /** @class */ (function () {
             });
         });
     };
+    /**
+     * Create packing list from order
+     * @link https://api.sevdesk.de/#tag/Order/operation/createPackingListFromOrder
+     * @param orderId the id of the order
+     * @param body Create packing list
+     * @returns
+     */
     Order.prototype.createPackagingListFromOrder = function (orderId, body) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
@@ -181,6 +285,13 @@ var Order = /** @class */ (function () {
             });
         });
     };
+    /**
+     * Create contract note from order
+     * @link https://api.sevdesk.de/#tag/Order/operation/createContractNoteFromOrder
+     * @param orderId the id of the order
+     * @param body Create contract note
+     * @returns
+     */
     Order.prototype.createContractNoteFromOrder = function (orderId, body) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
@@ -195,6 +306,14 @@ var Order = /** @class */ (function () {
             });
         });
     };
+    /**
+     * Retrieves the pdf document of an order with additional metadata and commit the order.
+     * @link https://api.sevdesk.de/#tag/Order/operation/orderGetPdf
+     * @param orderId ID of order from which you want the pdf
+     * @param download If u want to download the pdf of the order.
+     * @param preventSendBy Defines if u want to send the order.
+     * @returns A pdf file
+     */
     Order.prototype.getOnesPdf = function (orderId, download, preventSendBy) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
@@ -208,6 +327,13 @@ var Order = /** @class */ (function () {
             });
         });
     };
+    /**
+     * Marks an order as sent by a chosen send type.
+     * @link https://api.sevdesk.de/#tag/Order/operation/orderSendBy
+     * @param orderId ID of order to mark as sent
+     * @param body Specify the send type
+     * @returns changed order log entry
+     */
     Order.prototype.markOneAsSent = function (orderId, body) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {

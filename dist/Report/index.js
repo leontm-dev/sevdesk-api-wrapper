@@ -48,6 +48,14 @@ var Report = /** @class */ (function () {
     function Report(apiKey) {
         this.apiKey = apiKey;
     }
+    /**
+     * Export invoice list
+     * @link https://api.sevdesk.de/#tag/Report/operation/reportInvoice
+     * @param download
+     * @param view
+     * @param sevQuery
+     * @returns
+     */
     Report.prototype.exportInvoiceList = function (download, view, sevQuery) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
@@ -59,6 +67,14 @@ var Report = /** @class */ (function () {
             });
         });
     };
+    /**
+     * Export order list
+     * @link https://api.sevdesk.de/#tag/Report/operation/reportOrder
+     * @param download
+     * @param view
+     * @param sevQuery
+     * @returns
+     */
     Report.prototype.exportOrderList = function (download, view, sevQuery) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
@@ -70,6 +86,13 @@ var Report = /** @class */ (function () {
             });
         });
     };
+    /**
+     * Export contact list
+     * @link https://api.sevdesk.de/#tag/Report/operation/reportContact
+     * @param download
+     * @param sevQuery
+     * @returns
+     */
     Report.prototype.exportContactList = function (download, sevQuery) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
@@ -80,6 +103,13 @@ var Report = /** @class */ (function () {
             });
         });
     };
+    /**
+     * Export voucher list
+     * @link https://api.sevdesk.de/#tag/Report/operation/reportVoucher
+     * @param download
+     * @param sevQuery
+     * @returns
+     */
     Report.prototype.exportVoucherList = function (download, sevQuery) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {

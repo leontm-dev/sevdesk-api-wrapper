@@ -1,0 +1,312 @@
+import { SevClient, SevUser } from "../../types/models.types";
+export type Invoice = {
+    /**
+     * The invoice id
+     */
+    id: string;
+    /**
+     * The invoice object name
+     */
+    objectName: string;
+    /**
+     * The invoice number
+     */
+    invoiceNumber: string;
+    /**
+     * The contact used in the invoice
+     */
+    contact: {
+        /**
+         * Unique identifier of the contact
+         */
+        id: string;
+        /**
+         * Model name, which is 'Contact'
+         */
+        objectName: "Contact";
+    };
+    /**
+     * Date of invoice creation
+     */
+    create: string;
+    /**
+     * Date of last invoice update
+     */
+    update: string;
+    /**
+     * Client to which invoice belongs. Will be filled automatically
+     */
+    sevClient: SevClient;
+    /**
+     * The invoice date.
+     */
+    invoiceDate: string;
+    /**
+     * Normally consist of prefix plus the invoice number
+     */
+    header: string;
+    /**
+     * Certain html tags can be used here to format your text
+     */
+    headText: string;
+    /**
+     * Certain html tags can be used here to format your text
+     */
+    footText: string;
+    /**
+     * The time the customer has to pay the invoice in days
+     */
+    timeToPay: string;
+    /**
+     * If a value other than zero is used for the discount attribute, you need to specify the amount of days for which the discount is granted.
+     */
+    discountTime: string;
+    /**
+     * If you want to give a discount, define the percentage here. Otherwise provide zero as value
+     */
+    discount: string;
+    /**
+     * Can be omitted as complete address is defined in address attribute
+     */
+    addressCountry: {
+        /**
+         * Unique identifier of the country
+         */
+        id: string;
+        /**
+         * Model name, which is 'StaticCountry'
+         */
+        objectName: "StaticCountry";
+    };
+    /**
+     * Needs to be timestamp or dd.mm.yyyy
+     */
+    payDate: string;
+    /**
+     * Will be filled automatically by our system and can't be changed
+     */
+    createUser: SevUser;
+    /**
+     * Timestamp. This can also be a date range if you also use the attribute deliveryDateUntil
+     */
+    deliveryDate: string;
+    /**
+     * Please have a look in our Types and status of invoices to see what the different status codes mean
+     */
+    status: "50" | "100" | "200" | "750" | "1000";
+    /**
+     * Defines if the client uses the small settlement scheme. If yes, the invoice must not contain any vat
+     */
+    smallSettlement: boolean;
+    /**
+     * The user who acts as a contact person for the invoice
+     */
+    contactPerson: SevUser;
+    /**
+     * This is not used anymore. Use the taxRate of the individual positions instead.
+     */
+    taxRate: string;
+    /**
+     * Use this in sevdesk-Update 2.0 (replaces taxType / taxSet).
+  
+  See list of available VAT rules.
+     */
+    taxRule: {
+        id: "1" | "2" | "3" | "4" | "5" | "11" | "17" | "18" | "19" | "20" | "21";
+        /**
+         * Name of the object. Must always be TaxRule
+         */
+        objectName: "TaxRule";
+    };
+    /**
+     * A common tax text would be 'Umsatzsteuer 19%'
+     */
+    taxText: string;
+    /**
+     * Defines how many reminders have already been sent for the invoice. Starts with 1 (Payment reminder) and should be incremented by one every time another reminder is sent.
+     */
+    dunningLevel: string;
+    /**
+     * Use this in sevdesk-Update 1.0 (instead of taxRule).
+  
+  Tax type of the invoice. There are four tax types:
+  
+  1. default - Umsatzsteuer ausweisen
+  2. eu - Steuerfreie innergemeinschaftliche Lieferung (Europäische Union)
+  3. noteu - Steuerschuldnerschaft des Leistungsempfängers (außerhalb EU, z. B. Schweiz)
+  4. custom - Using custom tax set
+  5. ss - Not subject to VAT according to §19 1 UStG Tax rates are heavily connected to the tax type used.
+     */
+    taxType: "default" | "eu" | "noteu" | "custom";
+    /**
+     * Payment method used for the invoice
+     */
+    paymentMethod: {
+        /**
+         * Unique identifier of the payment method
+         */
+        id: string;
+        /**
+         * Model name, which is 'PaymentMethod'
+         */
+        objectName: "PaymentMethod";
+    };
+    /**
+     * Cost centre for the invoice
+     */
+    costCentre: {
+        /**
+         * Unique identifier of the cost centre
+         */
+        id: string;
+        /**
+         * Model name, which is 'CostCentre'
+         */
+        objectName: "CostCentre";
+    };
+    /**
+     * The date the invoice was sent to the customer
+     */
+    senDate: string;
+    /**
+     * Origin of the invoice. Could f.e. be an order
+     */
+    origin: {
+        /**
+         * Unique identifier of the object
+         */
+        id: string;
+        /**
+         * Model name. Could f.e. be 'Order''
+         */
+        objectName: string;
+    };
+    /**
+     * Type of the invoice. For more information on the different types, check this section
+     */
+    invoiceType: "RE" | "WKR" | "SR" | "MA" | "TR" | "AR" | "ER";
+    /**
+     * The interval in which recurring invoices are due as ISO-8601 duration.
+  Necessary attribute for all recurring invoices.
+     */
+    accountIntervall: string;
+    /**
+     * Timestamp when the next invoice will be generated by this recurring invoice.
+     */
+    accountNextInvoice: string;
+    /**
+     * Total reminder amount
+     */
+    reminderTotal: string;
+    /**
+     * Debit of the reminder
+     */
+    reminderDebit: string;
+    /**
+     * Deadline of the reminder as timestamp
+     */
+    reminderDeadline: string;
+    /**
+     * The additional reminder charge
+     */
+    reminderChart: string;
+    /**
+     * Use this in sevdesk-Update 1.0 (instead of taxRule).
+  
+  Tax set of the invoice. Needs to be added if you chose the tax type custom
+     */
+    taxSet: {
+        /**
+         * Unique identifier of the object
+         */
+        id: string;
+        /**
+         * Model name, which is 'TaxSet'
+         */
+        objectName: "TaxSet";
+    };
+    /**
+     * Complete address of the recipient including name, street, city, zip and country. * Line breaks can be used and will be displayed on the invoice pdf.
+     */
+    address: string;
+    /**
+     * Currency used in the invoice. Needs to be currency code according to ISO-4217
+     */
+    currency: string;
+    /**
+     * Net sum of the invoice
+     */
+    sumNet: string;
+    /**
+     * Tax sum of the invoice
+     */
+    sumTax: string;
+    /**
+     * Gross sum of the invoice
+     */
+    sumGross: string;
+    /**
+     * Sum of all discounts in the invoice
+     */
+    sumDiscounts: string;
+    /**
+     * Net sum of the invoice in the foreign currency
+     */
+    sumNetForeignCurrency: string;
+    /**
+     * Tax sum of the invoice in the foreign currency
+     */
+    sumTaxForeignCurrency: string;
+    /**
+     * Gross sum of the invoice in the foreign currency
+     */
+    sumGrossForeignCurrency: string;
+    /**
+     * Discounts sum of the invoice in the foreign currency
+     */
+    sumDiscountsForeignCurrency: string;
+    /**
+     * Net accounting sum of the invoice. Is usually the same as sumNet
+     */
+    sumNetAccounting: string;
+    /**
+     * Tax accounting sum of the invoice. Is usually the same as sumTax
+     */
+    sumTaxAccounting: string;
+    /**
+     * Gross accounting sum of the invoice. Is usually the same as sumGross
+     */
+    sumGrossAccounting: string;
+    /**
+     * Amount which has already been paid for this invoice by the customer
+     */
+    paidAmount: number;
+    /**
+     * Internal note of the customer. Contains data entered into field 'Referenz/Bestellnummer'
+     */
+    customerInternalNote: string;
+    /**
+     * If true, the net amount of each position will be shown on the invoice. Otherwise gross amount
+     */
+    showNet: boolean;
+    /**
+     * Enshrined invoices cannot be changed. Can only be set via Invoice/{invoiceId}/enshrine. This operation cannot be undone.
+     */
+    enshrined: string;
+    /**
+     * Type which was used to send the invoice. IMPORTANT: Please refer to the invoice section of the * API-Overview to understand how this attribute can be used before using it!
+     */
+    sendType: "VPR" | "VPDF" | "VM" | "VP";
+    /**
+     * If the delivery date should be a time range, another timestamp can be provided in this attribute * to define a range from timestamp used in deliveryDate attribute to the timestamp used here.
+     */
+    deliveryDateUntil: string;
+    /**
+     * Internal attribute
+     */
+    datevConnectOnline: object;
+    /**
+     * Internal attribute
+     */
+    sendPaymentReceivedNotificationDate: string;
+};

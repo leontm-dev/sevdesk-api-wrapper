@@ -40,10 +40,21 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.InvoicePos = void 0;
 var common_classes_1 = require("../types/common.classes");
 // Code
+/**
+ * @link https://api.sevdesk.de/#tag/InvoicePos
+ */
 var InvoicePos = /** @class */ (function () {
     function InvoicePos(apiKey) {
         this.apiKey = apiKey;
     }
+    /**
+     * There are a multitude of parameter which can be used to filter.
+     * @link https://api.sevdesk.de/#tag/InvoicePos/operation/getInvoicePos
+     * @param invoiceId Retrieve all invoices positions with this invoice. Must be provided with invoice[objectName]
+     * @param id Retrieve all InvoicePos with this InvoicePos id
+     * @param partId Retrieve all invoices positions with this part. Must be provided with part[objectName]
+     * @returns
+     */
     InvoicePos.prototype.getMany = function (invoiceId, id, partId) {
         return __awaiter(this, void 0, void 0, function () {
             var queryObj;

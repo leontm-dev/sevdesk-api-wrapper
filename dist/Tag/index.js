@@ -40,6 +40,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Tag = void 0;
 var common_classes_1 = require("../types/common.classes");
 // Code
+/**
+ * @link https://api.sevdesk.de/#tag/Tag
+ */
 var Tag = /** @class */ (function () {
     function Tag(apiKey) {
         this.apiKey = apiKey;
@@ -62,7 +65,9 @@ var Tag = /** @class */ (function () {
                             queryObj["id"] = id.toString();
                         if (name)
                             queryObj["name"] = name;
-                        return [4 /*yield*/, new common_classes_1.API(this.apiKey).request("/Tag", queryObj, { method: "GET" })];
+                        return [4 /*yield*/, new common_classes_1.API(this.apiKey).request("/Tag", queryObj, {
+                                method: "GET",
+                            })];
                     case 1: return [2 /*return*/, _a.sent()];
                 }
             });
@@ -150,7 +155,9 @@ var Tag = /** @class */ (function () {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, new common_classes_1.API(this.apiKey).request("/TagRelation", undefined, { method: "GET" })];
+                    case 0: return [4 /*yield*/, new common_classes_1.API(this.apiKey).request("/TagRelation", undefined, {
+                            method: "GET",
+                        })];
                     case 1: return [2 /*return*/, _a.sent()];
                 }
             });

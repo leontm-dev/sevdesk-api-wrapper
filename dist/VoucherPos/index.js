@@ -44,6 +44,12 @@ var VoucherPos = /** @class */ (function () {
     function VoucherPos(apiKey) {
         this.apiKey = apiKey;
     }
+    /**
+     * Retrieve all voucher positions depending on the filters defined in the query.
+     * @link https://api.sevdesk.de/#tag/VoucherPos/operation/getVoucherPositions
+     * @param voucherId Retrieve all vouchers positions belonging to this voucher. Must be provided with voucher[objectName]
+     * @returns
+     */
     VoucherPos.prototype.getMany = function (voucherId) {
         return __awaiter(this, void 0, void 0, function () {
             var queryObj;
@@ -55,7 +61,9 @@ var VoucherPos = /** @class */ (function () {
                             (queryObj["voucher[id]"] = voucherId.toString()),
                                 (queryObj["voucher[objectName]"] = "Voucher");
                         }
-                        return [4 /*yield*/, new common_classes_1.API(this.apiKey).request("/VoucherPos", queryObj, { method: "GET" })];
+                        return [4 /*yield*/, new common_classes_1.API(this.apiKey).request("/VoucherPos", queryObj, {
+                                method: "GET",
+                            })];
                     case 1: return [2 /*return*/, _a.sent()];
                 }
             });

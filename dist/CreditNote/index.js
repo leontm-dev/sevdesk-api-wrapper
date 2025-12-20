@@ -40,6 +40,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.CreditNote = void 0;
 var common_classes_1 = require("../types/common.classes");
 // Code
+/**
+ * @link https://api.sevdesk.de/#tag/CreditNote
+ */
 var CreditNote = /** @class */ (function () {
     function CreditNote(apiKey) {
         this.apiKey = apiKey;
@@ -73,7 +76,9 @@ var CreditNote = /** @class */ (function () {
                             queryObj["contact[id]"] = contactId.toString();
                             queryObj["contact[objectName]"] = "Contact";
                         }
-                        return [4 /*yield*/, new common_classes_1.API(this.apiKey).request("/CreditNote", queryObj, { method: "GET" })];
+                        return [4 /*yield*/, new common_classes_1.API(this.apiKey).request("/CreditNote", queryObj, {
+                                method: "GET",
+                            })];
                     case 1: return [2 /*return*/, _a.sent()];
                 }
             });
@@ -156,7 +161,13 @@ var CreditNote = /** @class */ (function () {
             });
         });
     };
-    // TODO: Documentation
+    /**
+     * Returns a single creditNote
+     * @link https://api.sevdesk.de/#tag/CreditNote/operation/getcreditNoteById
+     * @param creditNoteId ID of creditNote to return
+     * @returns
+  Array of objects (creditNote model)
+     */
     CreditNote.prototype.getOne = function (creditNoteId) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
@@ -167,7 +178,13 @@ var CreditNote = /** @class */ (function () {
             });
         });
     };
-    // TODO: Documentation
+    /**
+     * Update a creditNote
+     * @link https://api.sevdesk.de/#tag/CreditNote/operation/updatecreditNote
+     * @param creditNoteId ID of creditNote to update
+     * @param body Update data
+     * @returns Changed creditNote resources
+     */
     CreditNote.prototype.updateOne = function (creditNoteId, body) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
@@ -182,6 +199,11 @@ var CreditNote = /** @class */ (function () {
             });
         });
     };
+    /**
+     * @link https://api.sevdesk.de/#tag/CreditNote/operation/deletecreditNote
+     * @param creditNoteId Id of creditNote resource to delete
+     * @returns
+     */
     CreditNote.prototype.deleteOne = function (creditNoteId) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
@@ -192,6 +214,15 @@ var CreditNote = /** @class */ (function () {
             });
         });
     };
+    /**
+     * Sending a credit note to end-customers is an important part of the bookkeeping process.
+  Depending on the way you want to send the credit note, you need to use different endpoints.
+  Let's start with just printing out the credit note, meaning we only need to render the pdf.
+     * @link https://api.sevdesk.de/#tag/CreditNote/operation/sendCreditNoteByPrinting
+     * @param creditNoteId ID of creditNote to return
+     * @param sendType the type you want to print.
+     * @returns
+     */
     CreditNote.prototype.sendOneByPrinting = function (creditNoteId, sendType) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
@@ -202,6 +233,13 @@ var CreditNote = /** @class */ (function () {
             });
         });
     };
+    /**
+     * Marks an credit note as sent by a chosen send type.
+     * @link https://api.sevdesk.de/#tag/CreditNote/operation/creditNoteSendBy
+     * @param creditNoteId ID of credit note to mark as sent
+     * @param body Specify the send type
+     * @returns
+     */
     CreditNote.prototype.markOneAsSent = function (creditNoteId, body) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
@@ -216,6 +254,15 @@ var CreditNote = /** @class */ (function () {
             });
         });
     };
+    /**
+     * Sets the current date and time as a value for the property enshrined.
+  This operation is only possible if the status is "Open" ("status": "200") or higher.
+  
+  Enshrined credit notes cannot be changed. This operation cannot be undone.
+    * @link https://api.sevdesk.de/#tag/CreditNote/operation/creditNoteEnshrine
+     * @param creditNoteId ID of the credit note to enshrine
+     * @returns
+     */
     CreditNote.prototype.enshrineOne = function (creditNoteId) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
@@ -226,6 +273,14 @@ var CreditNote = /** @class */ (function () {
             });
         });
     };
+    /**
+     * Retrieves the pdf document of a credit note with additional metadata.
+     * @link https://api.sevdesk.de/#tag/CreditNote/operation/creditNoteGetPdf
+     * @param creditNoteId ID of credit note from which you want the pdf
+     * @param download If u want to download the pdf of the credit note.
+     * @param preventSendBy Defines if u want to send the credit note.
+     * @returns A pdf file
+     */
     CreditNote.prototype.getOnesPdf = function (creditNoteId, download, preventSendBy) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
@@ -236,6 +291,15 @@ var CreditNote = /** @class */ (function () {
             });
         });
     };
+    /**
+     * This endpoint sends the specified credit note to a customer via email.
+  This will automatically mark the credit note as sent.
+  Please note, that in production an credit note is not allowed to be changed after this happened!
+     * @link https://api.sevdesk.de/#tag/CreditNote/operation/sendCreditNoteViaEMail
+     * @param creditNoteId ID of credit note to be sent via email
+     * @param body Mail data
+     * @returns created mail object
+     */
     CreditNote.prototype.sendOneViaEmail = function (creditNoteId, body) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
@@ -250,6 +314,16 @@ var CreditNote = /** @class */ (function () {
             });
         });
     };
+    /**
+     * Booking the credit note with a transaction is probably the most important part in the bookkeeping process.
+  There are several ways on correctly booking a credit note, all by using the same endpoint.
+  Conveniently, the booking process is exactly the same as the process for invoices and vouchers.
+  For this reason, you can have a look at it in the invoice chapter and all you need to do is to change "Invoice" into "CreditNote" in the URL.
+     * @link https://api.sevdesk.de/#tag/CreditNote/operation/bookCreditNote
+     * @param creditNoteId ID of credit note to book
+     * @param body Booking data
+     * @returns changed invoice log entry
+     */
     CreditNote.prototype.bookOne = function (creditNoteId, body) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
@@ -264,6 +338,16 @@ var CreditNote = /** @class */ (function () {
             });
         });
     };
+    /**
+     * Resets the status "Open" ("status": "200"). Linked transactions will be unlinked.
+  This is not possible if the credit note itself or one of its transactions (CheckAccountTransaction) is already enshrined.
+  
+  This endpoint cannot be used to increase the status to "Open" ("status": "200").
+  Use CreditNote/{creditNoteId}/sendBy / CreditNote/{creditNoteId}/sendViaEmail instead.
+     * @link https://api.sevdesk.de/#tag/CreditNote/operation/creditNoteResetToOpen
+     * @param creditNoteId ID of the credit note to reset
+     * @returns changed credit note
+     */
     CreditNote.prototype.resetOnesStatusToOpen = function (creditNoteId) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
@@ -274,6 +358,14 @@ var CreditNote = /** @class */ (function () {
             });
         });
     };
+    /**
+     * Resets the status to "Draft" ("status": "100").
+  This is only possible if the credit note has the status "Open" ("status": "200").
+  If it has a higher status use CreditNote/{creditNoteId}/resetToOpen first.
+     * @link https://api.sevdesk.de/#tag/CreditNote/operation/creditNoteResetToDraft
+     * @param creditNoteId ID of the credit note to reset
+     * @returns changed credit note
+     */
     CreditNote.prototype.resetOnesStatusToDraft = function (creditNoteId) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {

@@ -40,10 +40,19 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.OrderPos = void 0;
 var common_classes_1 = require("../types/common.classes");
 // Code
+/**
+ * @link https://api.sevdesk.de/#tag/OrderPos
+ */
 var OrderPos = /** @class */ (function () {
     function OrderPos(apiKey) {
         this.apiKey = apiKey;
     }
+    /**
+     * Retrieve all order positions depending on the filters defined in the query.
+     * @link https://api.sevdesk.de/#tag/OrderPos/operation/getOrderPositions
+     * @param orderId Retrieve all order positions belonging to this order. Must be provided with voucher[objectName]
+     * @returns
+     */
     OrderPos.prototype.getMany = function (orderId) {
         return __awaiter(this, void 0, void 0, function () {
             var queryObj;
@@ -63,6 +72,12 @@ var OrderPos = /** @class */ (function () {
             });
         });
     };
+    /**
+     * Returns a single order position
+     * @link https://api.sevdesk.de/#tag/OrderPos/operation/getOrderPositionById
+     * @param orderPosId ID of order position to return
+     * @returns
+     */
     OrderPos.prototype.getOne = function (orderPosId) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
@@ -73,6 +88,13 @@ var OrderPos = /** @class */ (function () {
             });
         });
     };
+    /**
+     * Update an order position
+     * @link https://api.sevdesk.de/#tag/OrderPos/operation/updateOrderPosition
+     * @param orderPosId ID of order position to update
+     * @param body Update data
+     * @returns
+     */
     OrderPos.prototype.updateOne = function (orderPosId, body) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
@@ -87,7 +109,12 @@ var OrderPos = /** @class */ (function () {
             });
         });
     };
-    OrderPos.prototype.deelteOne = function (orderPosId) {
+    /**
+     * @link https://api.sevdesk.de/#tag/OrderPos/operation/deleteOrderPos
+     * @param orderPosId Id of order position resource to delete
+     * @returns
+     */
+    OrderPos.prototype.deleteOne = function (orderPosId) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {

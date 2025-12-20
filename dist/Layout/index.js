@@ -40,10 +40,18 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Layout = void 0;
 var common_classes_1 = require("../types/common.classes");
 // Code
+/**
+ * @link https://api.sevdesk.de/#tag/Layout
+ */
 var Layout = /** @class */ (function () {
     function Layout(apiKey) {
         this.apiKey = apiKey;
     }
+    /**
+     * Retrieve all letterpapers with Thumb
+     * @link https://api.sevdesk.de/#tag/Layout/operation/getLetterpapersWithThumb
+     * @returns
+     */
     Layout.prototype.getManyLetterpapers = function () {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
@@ -54,6 +62,11 @@ var Layout = /** @class */ (function () {
             });
         });
     };
+    /**
+     * Retrieve all templates
+     * @link https://api.sevdesk.de/#tag/Layout/operation/getTemplates
+     * @returns
+     */
     Layout.prototype.getManyTemplates = function () {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
@@ -64,6 +77,13 @@ var Layout = /** @class */ (function () {
             });
         });
     };
+    /**
+     * Update an existing invoice template
+     * @link https://api.sevdesk.de/#tag/Layout/operation/updateInvoiceTemplate
+     * @param invoiceId ID of invoice to update
+     * @param body Change Layout
+     * @returns
+     */
     Layout.prototype.updateOneInvoiceTemplate = function (invoiceId, body) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
@@ -78,6 +98,13 @@ var Layout = /** @class */ (function () {
             });
         });
     };
+    /**
+     * Update an existing order template
+     * @link https://api.sevdesk.de/#tag/Layout/operation/updateOrderTemplate
+     * @param orderId ID of order to update
+     * @param body Change Layout
+     * @returns
+     */
     Layout.prototype.updateOneOrderTemplate = function (orderId, body) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
@@ -92,6 +119,13 @@ var Layout = /** @class */ (function () {
             });
         });
     };
+    /**
+     * Update an existing of credit note template
+     * @link https://api.sevdesk.de/#tag/Layout/operation/updateCreditNoteTemplate
+     * @param creditNoteId ID of credit note to update
+     * @param body Change Layout
+     * @returns
+     */
     Layout.prototype.updateOneCreditNoteTemplate = function (creditNoteId, body) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
