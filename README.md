@@ -10,6 +10,7 @@ It comes with preconfigured types for models, responses and request bodies.
 This project is based on the official [sevdesk API Documentation](https://api.sevdesk.de/#section/General-information). If you run into any problem or if you suddenly need a error description to speed up your debug process, check their docs first.
 
 Information that describe types, classes and type-properties are directly from the sevdesk API Documentation, where you will find further explanation. The contents have only been changes in terms of spelling corrections.
+All rights for the contents mentioned are reserved by sevDesk GmbH.
 
 ## Documentation
 
