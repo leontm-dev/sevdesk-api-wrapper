@@ -4,8 +4,7 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "build": "yarn && tsc",
-    "publish": "yarn build && npm publish"
+    "build": "yarn && tsc"
   },
   "keywords": [
     "sevdesk",
@@ -14,7 +13,9 @@
     "typescript",
     "typesafe",
     "nodejs",
-    "api-wrapper"
+    "api-wrapper",
+    "sdk",
+    "sevdesk-sdk"
   ],
   "homepage": "https://github.com/leontm-dev/sevdesk-api-wrapper",
   "author": {
@@ -22,8 +23,8 @@
     "name": "Leon Anneken",
     "url": "https://leontm.me"
   },
-  "license": "ISC",
-  "description": "This package is a typesafe wrapper for the sevDesk API",
+  "license": "MIT",
+  "description": "A typesafe API SDK for the sevdesk API.",
   "dependencies": {},
   "bugs": {
     "email": "lanneken09@gmail.com",
