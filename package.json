@@ -31,7 +31,7 @@
     "url": "https://github.com/leontm-dev/sevdesk-api-wrapper/issues"
   },
   "devDependencies": {
-    "@types/node": "^25.0.3",
+    "@types/node": "^26.0.0",
     "ts-node": "^10.9.2",
     "typescript": "^6.0.2"
   },
